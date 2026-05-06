@@ -490,6 +490,59 @@ body {
 }
 .btn:active { opacity: 0.7; }
 
+/* Search */
+.search-wrap {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+.search-input {
+  width: 100%;
+  padding: 9px 36px 9px 12px;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+.search-input::placeholder { color: var(--faint); font-style: italic; }
+.search-input:focus { border-color: var(--muted); }
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--faint);
+  cursor: pointer;
+  display: none;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  line-height: 1;
+}
+.search-clear.visible { display: block; }
+.search-clear:hover { color: var(--muted); }
+
+.search-results-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  display: none;
+}
+.search-results-label.visible { display: block; }
+
+.ingredient-card.search-result {
+  border-style: dashed;
+}
+
 /* Footer */
 .footer {
   text-align: center;
@@ -763,9 +816,109 @@ const EFFECTS = [
   }
 ];
 
+/* ─── Extended search-only ingredients ─── */
+const EXTENDED = {
+  yellow: [
+    { name: "White Pasta",       emoji: "🍝" },
+    { name: "Corn",              emoji: "🌽" },
+    { name: "Mango",             emoji: "🥭" },
+    { name: "Dates",             emoji: "🫘" },
+    { name: "Maple Syrup",       emoji: "🍁" },
+    { name: "Watermelon",        emoji: "🍉" },
+    { name: "Rice Cakes",        emoji: "🍘" },
+    { name: "Pineapple",         emoji: "🍍" },
+    { name: "Sugarcane Juice",   emoji: "🥤" },
+    { name: "Jaggery",           emoji: "🟫" },
+  ],
+  orange: [
+    { name: "Butternut Squash",  emoji: "🎃" },
+    { name: "Yam",               emoji: "🍠" },
+    { name: "Parsnip",           emoji: "🥕" },
+    { name: "Lentil Pasta",      emoji: "🍝" },
+    { name: "Rye Bread",         emoji: "🍞" },
+    { name: "Millet",            emoji: "🌾" },
+    { name: "Sorghum",           emoji: "🌾" },
+    { name: "Taro",              emoji: "🫚" },
+    { name: "Plantain",          emoji: "🍌" },
+  ],
+  red: [
+    { name: "Paneer",            emoji: "🧀" },
+    { name: "Chickpeas",         emoji: "🫘" },
+    { name: "Kidney Beans",      emoji: "🫘" },
+    { name: "Black Beans",       emoji: "🫘" },
+    { name: "Greek Yogurt",      emoji: "🥛" },
+    { name: "Cottage Cheese",    emoji: "🧀" },
+    { name: "Tuna",              emoji: "🐟" },
+    { name: "Shrimp",            emoji: "🍤" },
+    { name: "Tempeh",            emoji: "🟫" },
+    { name: "Mutton",            emoji: "🍖" },
+  ],
+  blue: [
+    { name: "Walnuts",           emoji: "🌰" },
+    { name: "Flaxseeds",         emoji: "🌱" },
+    { name: "Chia Seeds",        emoji: "🌱" },
+    { name: "Coconut Oil",       emoji: "🥥" },
+    { name: "Ghee",              emoji: "🫙" },
+    { name: "Tahini",            emoji: "🫙" },
+    { name: "Peanut Butter",     emoji: "🥜" },
+    { name: "Mackerel",          emoji: "🐟" },
+    { name: "Sesame Oil",        emoji: "🫙" },
+    { name: "Hemp Seeds",        emoji: "🌱" },
+  ],
+  purple: [
+    { name: "Pomegranate",       emoji: "🍎" },
+    { name: "Acai",              emoji: "🫐" },
+    { name: "Purple Sweet Potato", emoji: "🍠" },
+    { name: "Eggplant",          emoji: "🍆" },
+    { name: "Black Grapes",      emoji: "🍇" },
+    { name: "Moringa",           emoji: "🌿" },
+    { name: "Amla",              emoji: "🟢" },
+    { name: "Jamun",             emoji: "🍇" },
+    { name: "Ashwagandha",       emoji: "🌿" },
+    { name: "Spirulina",         emoji: "🌊" },
+  ],
+  black: [
+    { name: "Cardamom",          emoji: "🫛" },
+    { name: "Cinnamon",          emoji: "🌿" },
+    { name: "Cloves",            emoji: "🌿" },
+    { name: "Star Anise",        emoji: "⭐" },
+    { name: "Fenugreek",         emoji: "🌱" },
+    { name: "Mustard Seeds",     emoji: "🌱" },
+    { name: "Nigella Seeds",     emoji: "🌱" },
+    { name: "Dried Chilli",      emoji: "🌶" },
+    { name: "Asafoetida",        emoji: "🫙" },
+    { name: "Mace",              emoji: "🌿" },
+  ],
+  green: [
+    { name: "Kale",              emoji: "🥬" },
+    { name: "Peas",              emoji: "🫛" },
+    { name: "Zucchini",          emoji: "🥒" },
+    { name: "Celery",            emoji: "🥬" },
+    { name: "Asparagus",         emoji: "🌿" },
+    { name: "Methi",             emoji: "🌿" },
+    { name: "Moringa Leaves",    emoji: "🌿" },
+    { name: "Drumstick",         emoji: "🌿" },
+    { name: "Lettuce",           emoji: "🥬" },
+    { name: "Arugula",           emoji: "🥬" },
+  ],
+  brown: [
+    { name: "Barley",            emoji: "🌾" },
+    { name: "Buckwheat",         emoji: "🌾" },
+    { name: "Amaranth",          emoji: "🌾" },
+    { name: "Moong Dal",         emoji: "🫘" },
+    { name: "Toor Dal",          emoji: "🫘" },
+    { name: "Urad Dal",          emoji: "🫘" },
+    { name: "Oat Bran",          emoji: "🌾" },
+    { name: "Spelt",             emoji: "🌾" },
+    { name: "Farro",             emoji: "🌾" },
+    { name: "Rajma",             emoji: "🫘" },
+  ],
+};
+
 /* ─── State ─── */
 const selected = new Set();
 let activeEffect = null;
+let searchResultKeys = new Set(); // tracks dynamically added search cards
 
 /* ─── Build effect pills ─── */
 const pillsContainer = document.getElementById("effectPills");
@@ -799,6 +952,23 @@ function toggleEffect(key) {
 
 /* ─── Build ingredient grid ─── */
 const grid = document.getElementById("ingredientGrid");
+
+// Search box
+const searchWrap = document.createElement("div");
+searchWrap.className = "search-wrap";
+searchWrap.innerHTML = `
+  <input class="search-input" id="searchInput" type="text" placeholder="Search ingredients…" autocomplete="off" autocorrect="off" spellcheck="false">
+  <button class="search-clear" id="searchClear">✕</button>`;
+grid.appendChild(searchWrap);
+
+const searchResultsLabel = document.createElement("div");
+searchResultsLabel.className = "search-results-label";
+searchResultsLabel.id = "searchResultsLabel";
+grid.appendChild(searchResultsLabel);
+
+document.getElementById("searchInput").addEventListener("input", handleSearch);
+document.getElementById("searchClear").addEventListener("click", clearSearch);
+
 GROUPS.forEach(group => {
   const section = document.createElement("div");
   section.className = "group-section";
@@ -825,6 +995,80 @@ GROUPS.forEach(group => {
     iGrid.appendChild(card);
   });
 });
+
+/* ─── Search ─── */
+function handleSearch() {
+  const query = document.getElementById("searchInput").value.trim().toLowerCase();
+  const clearBtn = document.getElementById("searchClear");
+  const label = document.getElementById("searchResultsLabel");
+
+  // Remove previously injected search result cards
+  searchResultKeys.forEach(key => {
+    const el = document.getElementById(`card-${key}`);
+    if (el) el.remove();
+  });
+  searchResultKeys.clear();
+
+  if (!query) {
+    clearBtn.classList.remove("visible");
+    label.classList.remove("visible");
+    return;
+  }
+
+  clearBtn.classList.add("visible");
+
+  let totalResults = 0;
+  GROUPS.forEach(group => {
+    const extended = EXTENDED[group.key] || [];
+    const matches = extended.filter(ing =>
+      ing.name.toLowerCase().includes(query)
+    );
+    if (matches.length === 0) return;
+
+    const iGrid = document.getElementById(`grid-${group.key}`);
+    matches.forEach((ing, i) => {
+      const key = `${group.key}:ext:${ing.name.replace(/\s+/g,'-').toLowerCase()}`;
+      if (document.getElementById(`card-${key}`)) return; // already injected
+      const card = document.createElement("div");
+      card.className = "ingredient-card search-result";
+      card.id = `card-${key}`;
+      card.style.borderColor = "var(--border)";
+      card.innerHTML = `
+        <span class="ingredient-emoji">${ing.emoji}</span>
+        <span class="ingredient-name">${ing.name}</span>`;
+      card.addEventListener("click", () => toggleIngredientExt(key, group, ing, card));
+      iGrid.appendChild(card);
+      searchResultKeys.add(key);
+      totalResults++;
+    });
+  });
+
+  if (totalResults > 0) {
+    label.textContent = `${totalResults} result${totalResults !== 1 ? 's' : ''} found`;
+    label.classList.add("visible");
+  } else {
+    label.textContent = `No results for "${query}"`;
+    label.classList.add("visible");
+  }
+}
+
+function clearSearch() {
+  document.getElementById("searchInput").value = "";
+  handleSearch();
+}
+
+function toggleIngredientExt(key, group, ing, card) {
+  if (selected.has(key)) {
+    selected.delete(key);
+    card.classList.remove("selected");
+    card.style.borderColor = "var(--border)";
+  } else {
+    selected.add(key);
+    card.classList.add("selected");
+    card.style.borderColor = group.color;
+  }
+  updateResult();
+}
 
 function applyEffectWeights() {
   GROUPS.forEach(group => {
@@ -1003,9 +1247,19 @@ function updateResult() {
   // Pills
   const pills = [];
   selected.forEach(key => {
-    const [groupKey, idx] = key.split(':');
+    const parts = key.split(':');
+    const groupKey = parts[0];
     const group = GROUPS.find(g => g.key === groupKey);
-    const ing = group.ingredients[parseInt(idx)];
+    let ing;
+    if (parts[1] === 'ext') {
+      // Extended ingredient — find by name slug
+      const nameSlug = parts[2];
+      const extended = EXTENDED[groupKey] || [];
+      ing = extended.find(e => e.name.replace(/\s+/g,'-').toLowerCase() === nameSlug);
+    } else {
+      ing = group.ingredients[parseInt(parts[1])];
+    }
+    if (!ing) return;
     pills.push(`<div class="selected-pill">
       <span class="pill-dot" style="background:${group.color}"></span>
       ${ing.emoji} ${ing.name}
@@ -1034,6 +1288,7 @@ function clearAll() {
     c.classList.remove("selected");
     c.style.borderColor = "var(--border)";
   });
+  clearSearch();
   updateResult();
 }
 </script>
