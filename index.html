@@ -98,6 +98,63 @@ body {
   margin-bottom: 14px;
 }
 
+/* Effect pills */
+.effect-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.effect-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.effect-pill:hover { color: var(--text); border-color: var(--faint); }
+.effect-pill:active { transform: scale(0.97); }
+.effect-pill.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+.effect-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.effect-pill.active .effect-pill-dot {
+  opacity: 1;
+  background: var(--bg);
+}
+
+/* Effect description */
+.effect-desc {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  display: none;
+}
+.effect-desc.visible { display: block; }
+
 /* Colour preview */
 .preview {
   border-radius: var(--radius-md);
@@ -155,14 +212,40 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.group-principle {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--faint);
+.group-weight-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
   margin-left: auto;
-  text-align: right;
-  max-width: 200px;
-  line-height: 1.4;
+  transition: all 0.3s;
+}
+.group-weight-badge.primary {
+  background: var(--text);
+  color: var(--bg);
+}
+.group-weight-badge.supporting {
+  background: var(--chip);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.group-weight-badge.suppressed {
+  background: transparent;
+  color: var(--faint);
+  border: 1px dashed var(--border);
+}
+.group-weight-badge.neutral {
+  display: none;
+}
+
+/* Group dimming */
+.group-section.suppressed .ingredient-card {
+  opacity: 0.45;
+}
+.group-section.suppressed .group-name {
+  color: var(--faint);
 }
 
 /* Ingredient cards */
@@ -178,7 +261,7 @@ body {
   padding: 10px 6px 8px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.15s, transform 0.12s, background 0.15s;
+  transition: border-color 0.15s, transform 0.12s, background 0.15s, opacity 0.3s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   position: relative;
@@ -240,6 +323,42 @@ body {
   font-style: italic;
   color: var(--muted);
   margin-top: 4px;
+  line-height: 1.5;
+}
+
+/* Effect alignment score */
+.alignment {
+  margin-top: 1rem;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--chip);
+}
+.alignment-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.alignment-bar-track {
+  height: 4px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.alignment-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--text);
+  transition: width 0.5s ease;
+}
+.alignment-text {
+  font-size: 13px;
+  color: var(--muted);
+  font-style: italic;
   line-height: 1.5;
 }
 
@@ -370,9 +489,6 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .btn:active { opacity: 0.7; }
-.btn-clear {
-  color: var(--faint);
-}
 
 /* Footer */
 .footer {
@@ -405,13 +521,20 @@ body {
     <span>Colour & Nourishment · Creatis</span>
   </div>
 
+  <!-- Step 1: Effect -->
+  <div class="card">
+    <div class="card-label">What are you eating for?</div>
+    <div class="effect-pills" id="effectPills"></div>
+    <div class="effect-desc" id="effectDesc"></div>
+  </div>
+
   <!-- Preview -->
   <div id="preview" class="preview">
     <span id="previewLabel" class="preview-label"></span>
     <span id="previewSub" class="preview-sub"></span>
   </div>
 
-  <!-- Ingredient selection -->
+  <!-- Step 2: Ingredient selection -->
   <div class="card">
     <div class="card-label">Select your ingredients</div>
     <div id="ingredientGrid"></div>
@@ -419,7 +542,7 @@ body {
 
   <!-- Result -->
   <div class="card">
-    <div id="empty" class="empty">Select ingredients above to see your meal's colour profile.</div>
+    <div id="empty" class="empty">Select an effect and ingredients to see your colour profile.</div>
     <div id="result" style="display:none">
       <div class="result-swatch-row">
         <div id="resultSwatch" class="result-swatch"></div>
@@ -428,6 +551,14 @@ body {
           <div id="resultSub" class="result-sub"></div>
           <div id="resultPrinciple" class="result-principle"></div>
         </div>
+      </div>
+
+      <div id="alignmentBox" class="alignment" style="display:none">
+        <div class="alignment-label">Alignment with <span id="alignmentEffect"></span></div>
+        <div class="alignment-bar-track">
+          <div class="alignment-bar-fill" id="alignmentBar"></div>
+        </div>
+        <div class="alignment-text" id="alignmentText"></div>
       </div>
 
       <div class="composition">
@@ -443,24 +574,21 @@ body {
       </div>
 
       <div class="action-row">
-        <button class="btn btn-clear" onclick="clearAll()">Clear all</button>
+        <button class="btn" onclick="clearAll()">Clear all</button>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    <a href="http://bizemind.com" target="_blank" rel="noopener">bizemind</a>
-    <span> — Built by Creatis</span>
+    <span>Built by </span><a href="https://creatis.in/pages/stack" target="_blank" rel="noopener">The Creatis Stack</a>
   </div>
 
 </div>
 <script>
-/* ─── Ingredient data ─── */
+/* ─── Colour groups ─── */
 const GROUPS = [
   {
-    key: "yellow",
-    name: "Yellow",
-    color: "#F5C518",
+    key: "yellow", name: "Yellow", color: "#F5C518",
     principle: "Fast, bright, and dominant — powerful in the right proportion, unstable alone.",
     food: "Simple carbs — quick energy, real but short-lived.",
     ingredients: [
@@ -471,9 +599,7 @@ const GROUPS = [
     ]
   },
   {
-    key: "orange",
-    name: "Orange",
-    color: "#E8763A",
+    key: "orange", name: "Orange", color: "#E8763A",
     principle: "Warm and bridging — neither extreme, but essential for depth.",
     food: "Complex carbs — slower energy, more sustained.",
     ingredients: [
@@ -484,9 +610,7 @@ const GROUPS = [
     ]
   },
   {
-    key: "red",
-    name: "Red",
-    color: "#C94040",
+    key: "red", name: "Red", color: "#C94040",
     principle: "Structural and intense — the foundation that holds everything else together.",
     food: "Protein — builds and repairs. Sets the foundation of any meal.",
     ingredients: [
@@ -497,9 +621,7 @@ const GROUPS = [
     ]
   },
   {
-    key: "blue",
-    name: "Blue",
-    color: "#4A7FA5",
+    key: "blue", name: "Blue", color: "#4A7FA5",
     principle: "Cool and moderating — slows the pace, deepens the outcome.",
     food: "Healthy fats — slows absorption, moderates intensity, sustains.",
     ingredients: [
@@ -510,71 +632,182 @@ const GROUPS = [
     ]
   },
   {
-    key: "purple",
-    name: "Purple",
-    color: "#7B5EA7",
+    key: "purple", name: "Purple", color: "#7B5EA7",
     principle: "Subtle and protective — works beneath the surface, easy to overlook, hard to replace.",
     food: "Phytonutrients — protective, restorative, easy to overlook.",
     ingredients: [
-      { name: "Blueberries",  emoji: "🫐" },
-      { name: "Beetroot",     emoji: "🫚" },
-      { name: "Red Cabbage",  emoji: "🥬" },
-      { name: "Turmeric",     emoji: "🌿" },
+      { name: "Blueberries", emoji: "🫐" },
+      { name: "Beetroot",    emoji: "🫚" },
+      { name: "Red Cabbage", emoji: "🥬" },
+      { name: "Turmeric",    emoji: "🌿" },
     ]
   },
   {
-    key: "black",
-    name: "Black",
-    color: "#2A2420",
+    key: "black", name: "Black", color: "#2A2420",
     principle: "Concentrated and transformative — a little is powerful, too much is destructive.",
     food: "Spices — transforms in small quantities. Overused, it overwhelms.",
     ingredients: [
-      { name: "Black Pepper",     emoji: "🌶" },
-      { name: "Cumin",            emoji: "🌱" },
-      { name: "Dark Chocolate",   emoji: "🍫" },
-      { name: "Coffee",           emoji: "☕" },
+      { name: "Black Pepper",   emoji: "🌶" },
+      { name: "Cumin",          emoji: "🌱" },
+      { name: "Dark Chocolate", emoji: "🍫" },
+      { name: "Coffee",         emoji: "☕" },
     ]
   },
   {
-    key: "green",
-    name: "Green",
-    color: "#4A8C5C",
+    key: "green", name: "Green", color: "#4A8C5C",
     principle: "Grounding and clearing — supports everything else, often the first thing skipped.",
     food: "Fibre + greens — clears, regulates, supports everything else.",
     ingredients: [
-      { name: "Spinach",   emoji: "🥬" },
-      { name: "Broccoli",  emoji: "🥦" },
-      { name: "Cucumber",  emoji: "🥒" },
-      { name: "Herbs",     emoji: "🌿" },
+      { name: "Spinach",  emoji: "🥬" },
+      { name: "Broccoli", emoji: "🥦" },
+      { name: "Cucumber", emoji: "🥒" },
+      { name: "Herbs",    emoji: "🌿" },
     ]
   },
   {
-    key: "brown",
-    name: "Brown",
-    color: "#7A5C3A",
+    key: "brown", name: "Brown", color: "#7A5C3A",
     principle: "Earthy and sustaining — no drama, just steady nourishment over time.",
     food: "Whole grains + legumes — slow-digesting, deeply nourishing.",
     ingredients: [
-      { name: "Quinoa",       emoji: "🌾" },
-      { name: "Whole Wheat",  emoji: "🫓" },
-      { name: "Chickpeas",    emoji: "🫘" },
-      { name: "Brown Rice",   emoji: "🍚" },
+      { name: "Quinoa",      emoji: "🌾" },
+      { name: "Whole Wheat", emoji: "🫓" },
+      { name: "Chickpeas",   emoji: "🫘" },
+      { name: "Brown Rice",  emoji: "🍚" },
     ]
   }
 ];
 
+/* ─── Effects ─── */
+// weight: 1.5 = primary, 1.0 = supporting, 0.3 = suppressed, 1.0 = neutral (black always 1.0)
+const EFFECTS = [
+  {
+    key: "energy",
+    label: "Energy",
+    description: "Fuel that moves fast and builds momentum. Prioritises quick and sustained carbohydrates with a protein base.",
+    weights: { yellow: 1.5, orange: 1.5, red: 1.0, blue: 0.3, purple: 1.0, black: 1.0, green: 1.0, brown: 1.0 },
+    primaryGroups: ["yellow", "orange"],
+    suggestion: (gc) => {
+      if (!(gc.red > 0)) return `Add a <span class="shift-ingredient">Red</span> ingredient — protein anchors fast energy and prevents a crash.`;
+      if (!(gc.orange > 0) && !(gc.brown > 0)) return `Add an <span class="shift-ingredient">Orange</span> or <span class="shift-ingredient">Brown</span> ingredient to extend the energy curve.`;
+      return `Good energy composition. You have both fast and sustained sources working together.`;
+    }
+  },
+  {
+    key: "satiety",
+    label: "Satiety",
+    description: "Fullness that lasts. Protein, fat, and slow carbs working in concert to sustain without heaviness.",
+    weights: { yellow: 0.3, orange: 1.0, red: 1.5, blue: 1.5, purple: 1.0, black: 1.0, green: 1.0, brown: 1.5 },
+    primaryGroups: ["red", "blue", "brown"],
+    suggestion: (gc) => {
+      if (!(gc.red > 0)) return `Add a <span class="shift-ingredient">Red</span> ingredient — protein is the anchor of any satiating meal.`;
+      if (!(gc.blue > 0)) return `Add a <span class="shift-ingredient">Blue</span> ingredient — fat slows digestion and extends fullness significantly.`;
+      if (gc.yellow > 1) return `You have multiple <span class="shift-ingredient">Yellow</span> ingredients — simple carbs will shorten how long this meal holds you.`;
+      return `Strong satiety composition. Protein, fat, and slow carbs are all present.`;
+    }
+  },
+  {
+    key: "clarity",
+    label: "Clarity",
+    description: "Mental clearness and steady attention. Prioritises anti-inflammatory foods and healthy fats that support brain function.",
+    weights: { yellow: 0.3, orange: 1.0, red: 1.0, blue: 1.5, purple: 1.5, black: 1.0, green: 1.5, brown: 1.0 },
+    primaryGroups: ["green", "purple", "blue"],
+    suggestion: (gc) => {
+      if (!(gc.purple > 0)) return `Add a <span class="shift-ingredient">Purple</span> ingredient — phytonutrients are the quiet engine of cognitive clarity.`;
+      if (!(gc.blue > 0)) return `Add a <span class="shift-ingredient">Blue</span> ingredient — the brain runs on healthy fats.`;
+      if (!(gc.green > 0)) return `Add a <span class="shift-ingredient">Green</span> ingredient to ground and clear the composition.`;
+      return `Well-tuned for clarity. Anti-inflammatory and fat-rich foods are well represented.`;
+    }
+  },
+  {
+    key: "longevity",
+    label: "Longevity",
+    description: "Eating for the long arc. Protective, anti-inflammatory, slow-releasing foods that compound over time.",
+    weights: { yellow: 0.3, orange: 1.0, red: 1.0, blue: 1.5, purple: 1.5, black: 1.0, green: 1.5, brown: 1.5 },
+    primaryGroups: ["purple", "brown", "green", "blue"],
+    suggestion: (gc) => {
+      if (!(gc.purple > 0)) return `Add a <span class="shift-ingredient">Purple</span> ingredient — protective phytonutrients are the cornerstone of longevity eating.`;
+      if (!(gc.green > 0)) return `Add a <span class="shift-ingredient">Green</span> ingredient — fibre and greens support the systems that sustain you long-term.`;
+      if (gc.yellow > 1) return `Ease back on <span class="shift-ingredient">Yellow</span> — simple carbs work against a longevity composition over time.`;
+      return `Strong longevity profile. Protective, slow, and anti-inflammatory foods are well represented.`;
+    }
+  },
+  {
+    key: "antifragility",
+    label: "Anti-fragility",
+    description: "Strength through diversity. No single dominant group — the composition itself is the strategy.",
+    weights: { yellow: 1.0, orange: 1.0, red: 1.0, blue: 1.0, purple: 1.5, black: 1.0, green: 1.5, brown: 1.0 },
+    primaryGroups: ["purple", "green"],
+    suggestion: (gc) => {
+      const activeGroups = Object.entries(gc).filter(([,v]) => v > 0).length;
+      if (activeGroups < 4) return `Anti-fragility requires range. You have ${activeGroups} group${activeGroups !== 1 ? 's' : ''} — aim for at least 4 to 5.`;
+      const dominated = Object.entries(gc).sort((a,b)=>b[1]-a[1]);
+      if (dominated[0][1] >= 3) {
+        const domGroup = GROUPS.find(g => g.key === dominated[0][0]);
+        return `Heavy on <span class="shift-ingredient">${domGroup.name}</span>. Anti-fragility is built on diversity, not dominance — pull back and spread wider.`;
+      }
+      return `Good range. Your composition draws from multiple systems — this is what anti-fragility looks like.`;
+    }
+  },
+  {
+    key: "calm",
+    label: "Calm",
+    description: "Settling the nervous system. Slow, grounding foods that reduce stimulation and support rest.",
+    weights: { yellow: 0.3, orange: 1.0, red: 1.0, blue: 1.5, purple: 1.0, black: 1.0, green: 1.5, brown: 1.5 },
+    primaryGroups: ["blue", "green"],
+    suggestion: (gc) => {
+      if (gc.yellow > 0) return `<span class="shift-ingredient">Yellow</span> ingredients — simple carbs — introduce a spike-and-drop cycle that works against calm.`;
+      if (!(gc.blue > 0)) return `Add a <span class="shift-ingredient">Blue</span> ingredient — healthy fats slow everything down in the best way.`;
+      if (!(gc.green > 0)) return `Add a <span class="shift-ingredient">Green</span> ingredient to ground the composition.`;
+      return `This is a calming composition. Slow, grounding, and without sharp stimulation.`;
+    }
+  }
+];
+
 /* ─── State ─── */
-const selected = new Set(); // "groupKey:ingredientIndex"
+const selected = new Set();
+let activeEffect = null;
+
+/* ─── Build effect pills ─── */
+const pillsContainer = document.getElementById("effectPills");
+EFFECTS.forEach(effect => {
+  const pill = document.createElement("button");
+  pill.className = "effect-pill";
+  pill.id = `effect-${effect.key}`;
+  pill.innerHTML = `<span class="effect-pill-dot"></span>${effect.label}`;
+  pill.addEventListener("click", () => toggleEffect(effect.key));
+  pillsContainer.appendChild(pill);
+});
+
+function toggleEffect(key) {
+  if (activeEffect === key) {
+    activeEffect = null;
+    document.querySelectorAll('.effect-pill').forEach(p => p.classList.remove("active"));
+    document.getElementById("effectDesc").classList.remove("visible");
+    document.getElementById("effectDesc").textContent = "";
+  } else {
+    activeEffect = key;
+    document.querySelectorAll('.effect-pill').forEach(p => p.classList.remove("active"));
+    document.getElementById(`effect-${key}`).classList.add("active");
+    const effect = EFFECTS.find(e => e.key === key);
+    const desc = document.getElementById("effectDesc");
+    desc.textContent = effect.description;
+    desc.classList.add("visible");
+  }
+  applyEffectWeights();
+  updateResult();
+}
 
 /* ─── Build ingredient grid ─── */
 const grid = document.getElementById("ingredientGrid");
 GROUPS.forEach(group => {
   const section = document.createElement("div");
   section.className = "group-section";
+  section.id = `section-${group.key}`;
   section.innerHTML = `
     <div class="group-header">
       <div class="group-dot" style="background:${group.color}"></div>
       <div class="group-name">${group.name}</div>
+      <span class="group-weight-badge neutral" id="badge-${group.key}"></span>
     </div>
     <div class="ingredient-grid" id="grid-${group.key}"></div>`;
   grid.appendChild(section);
@@ -585,7 +818,6 @@ GROUPS.forEach(group => {
     const card = document.createElement("div");
     card.className = "ingredient-card";
     card.id = `card-${key}`;
-    card.style.borderColor = "var(--border)";
     card.innerHTML = `
       <span class="ingredient-emoji">${ing.emoji}</span>
       <span class="ingredient-name">${ing.name}</span>`;
@@ -593,6 +825,41 @@ GROUPS.forEach(group => {
     iGrid.appendChild(card);
   });
 });
+
+function applyEffectWeights() {
+  GROUPS.forEach(group => {
+    const section = document.getElementById(`section-${group.key}`);
+    const badge = document.getElementById(`badge-${group.key}`);
+
+    if (!activeEffect) {
+      section.classList.remove("suppressed");
+      badge.className = "group-weight-badge neutral";
+      badge.textContent = "";
+      return;
+    }
+
+    const effect = EFFECTS.find(e => e.key === activeEffect);
+    const weight = effect.weights[group.key];
+
+    section.classList.remove("suppressed");
+    badge.className = "group-weight-badge";
+
+    if (weight >= 1.4) {
+      badge.classList.add("primary");
+      badge.textContent = "Primary";
+    } else if (weight <= 0.4) {
+      badge.classList.add("suppressed");
+      badge.textContent = "Low";
+      section.classList.add("suppressed");
+    } else if (effect.primaryGroups.includes(group.key)) {
+      badge.classList.add("supporting");
+      badge.textContent = "Supporting";
+    } else {
+      badge.className = "group-weight-badge neutral";
+      badge.textContent = "";
+    }
+  });
+}
 
 function toggleIngredient(key, group, idx, card) {
   if (selected.has(key)) {
@@ -607,72 +874,62 @@ function toggleIngredient(key, group, idx, card) {
   updateResult();
 }
 
-/* ─── Colour mixing ─── */
+/* ─── Colour mixing with effect weights ─── */
 function hexToRgb(hex) {
   const n = parseInt(hex.replace('#',''), 16);
-  return [( n>>16)&255, (n>>8)&255, n&255];
+  return [(n>>16)&255, (n>>8)&255, n&255];
 }
 function rgbToHex(r,g,b) {
   return '#' + [r,g,b].map(v => Math.round(v).toString(16).padStart(2,'0')).join('');
 }
 
 function getMealColor(groupCounts) {
-  // Weight by count — more ingredients from a group = stronger influence
+  const effect = activeEffect ? EFFECTS.find(e => e.key === activeEffect) : null;
   let r=0, g=0, b=0, total=0;
   Object.entries(groupCounts).forEach(([key, count]) => {
     if (count === 0) return;
-    const group = GROUPS.find(g => g.key === key);
+    const group = GROUPS.find(gr => gr.key === key);
+    const weight = effect ? effect.weights[key] : 1.0;
     const [cr,cg,cb] = hexToRgb(group.color);
-    r += cr * count;
-    g += cg * count;
-    b += cb * count;
-    total += count;
+    const contribution = count * weight;
+    r += cr * contribution;
+    g += cg * contribution;
+    b += cb * contribution;
+    total += contribution;
   });
   if (total === 0) return null;
   return rgbToHex(r/total, g/total, b/total);
 }
 
-/* ─── Colour profile naming ─── */
+/* ─── Alignment score ─── */
+function getAlignmentScore(groupCounts) {
+  if (!activeEffect) return null;
+  const effect = EFFECTS.find(e => e.key === activeEffect);
+  let score = 0, maxScore = 0;
+
+  Object.entries(groupCounts).forEach(([key, count]) => {
+    if (count === 0) return;
+    const weight = effect.weights[key];
+    // Primary adds, suppressed subtracts slightly, neutral neutral
+    if (weight >= 1.4) score += count * 2;
+    else if (weight <= 0.4) score -= count * 1;
+    else score += count * 1;
+    maxScore += count * 2;
+  });
+
+  // Clamp 0–100
+  const pct = Math.max(0, Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100)));
+  return pct;
+}
+
+/* ─── Profile name ─── */
 function getProfileName(groupCounts) {
   const sorted = Object.entries(groupCounts)
     .filter(([,v]) => v > 0)
     .sort((a,b) => b[1]-a[1]);
   if (sorted.length === 0) return null;
-  const top = sorted.slice(0,2).map(([k]) => {
-    const g = GROUPS.find(g => g.key === k);
-    return g.name;
-  });
+  const top = sorted.slice(0,2).map(([k]) => GROUPS.find(g => g.key === k).name);
   return top.join('–');
-}
-
-/* ─── Shift suggestion ─── */
-function getSuggestion(groupCounts, totalSelected) {
-  if (totalSelected < 2) return null;
-
-  const counts = Object.entries(groupCounts).sort((a,b) => b[1]-a[1]);
-  const dominant = counts[0];
-  const missing = GROUPS.filter(g => !groupCounts[g.key] || groupCounts[g.key] === 0);
-
-  // Rules
-  const hasProtein = (groupCounts["red"] || 0) > 0;
-  const hasFat     = (groupCounts["blue"] || 0) > 0;
-  const hasGreen   = (groupCounts["green"] || 0) > 0;
-  const hasSimpleCarb = (groupCounts["yellow"] || 0) > 0;
-  const hasComplex = (groupCounts["orange"] || 0) > 0;
-
-  if (!hasProtein) return `Add a <span class="shift-ingredient">Red</span> ingredient — lentils, eggs, or tofu — to give your meal structure and staying power.`;
-  if (!hasFat) return `Add a <span class="shift-ingredient">Blue</span> ingredient — avocado, olive oil, or almonds — to slow energy release and sustain the meal.`;
-  if (!hasGreen) return `Add a <span class="shift-ingredient">Green</span> ingredient — spinach, broccoli, or herbs — to ground and clear the composition.`;
-  if (hasSimpleCarb && !hasComplex && !hasProtein) return `Your meal is running fast. Add an <span class="shift-ingredient">Orange</span> ingredient — oats or sweet potato — to bridge quick energy into something more sustained.`;
-  if (dominant[1] >= 3) {
-    const domGroup = GROUPS.find(g => g.key === dominant[0]);
-    return `Heavy on <span class="shift-ingredient">${domGroup.name}</span>. Consider pulling back and adding contrast — your composition will be more balanced.`;
-  }
-  if (missing.length > 0 && totalSelected >= 4) {
-    const suggest = missing[Math.floor(Math.random() * Math.min(2, missing.length))];
-    return `You haven't used <span class="shift-ingredient">${suggest.name}</span> yet — ${suggest.food.toLowerCase()} Try adding one.`;
-  }
-  return `Well balanced. Your meal has good range across the colour spectrum.`;
 }
 
 /* ─── Update result ─── */
@@ -696,8 +953,6 @@ function updateResult() {
 
   const hex = getMealColor(groupCounts);
   const profileName = getProfileName(groupCounts);
-
-  // Determine dominant group for principle
   const dominantKey = Object.entries(groupCounts).sort((a,b)=>b[1]-a[1])[0][0];
   const dominantGroup = GROUPS.find(g => g.key === dominantKey);
 
@@ -708,11 +963,29 @@ function updateResult() {
   document.getElementById("previewLabel").textContent = profileName;
   document.getElementById("previewSub").textContent = `${totalSelected} ingredient${totalSelected!==1?'s':''}`;
 
-  // Result swatch
+  // Result
   document.getElementById("resultSwatch").style.background = hex;
   document.getElementById("resultName").textContent = profileName;
   document.getElementById("resultSub").textContent = dominantGroup.food;
   document.getElementById("resultPrinciple").textContent = `"${dominantGroup.principle}"`;
+
+  // Alignment
+  const alignmentBox = document.getElementById("alignmentBox");
+  if (activeEffect) {
+    const score = getAlignmentScore(groupCounts);
+    const effect = EFFECTS.find(e => e.key === activeEffect);
+    document.getElementById("alignmentEffect").textContent = effect.label;
+    document.getElementById("alignmentBar").style.width = `${score}%`;
+    let alignText = "";
+    if (score >= 80) alignText = "Your ingredients are closely aligned with this effect.";
+    else if (score >= 50) alignText = "Partial alignment — your composition moves in the right direction.";
+    else if (score >= 20) alignText = "Weak alignment — consider shifting your ingredient balance.";
+    else alignText = "Low alignment — the composition works against this effect.";
+    document.getElementById("alignmentText").textContent = alignText;
+    alignmentBox.style.display = "block";
+  } else {
+    alignmentBox.style.display = "none";
+  }
 
   // Composition bars
   const maxCount = Math.max(...Object.values(groupCounts), 1);
@@ -727,7 +1000,7 @@ function updateResult() {
     </div>`;
   }).join("");
 
-  // Selected pills
+  // Pills
   const pills = [];
   selected.forEach(key => {
     const [groupKey, idx] = key.split(':');
@@ -741,9 +1014,10 @@ function updateResult() {
   document.getElementById("selectedPills").innerHTML = pills.join("");
 
   // Shift suggestion
-  const suggestion = getSuggestion(groupCounts, totalSelected);
   const shiftBox = document.getElementById("shiftBox");
-  if (suggestion) {
+  if (activeEffect) {
+    const effect = EFFECTS.find(e => e.key === activeEffect);
+    const suggestion = effect.suggestion(groupCounts);
     document.getElementById("shiftText").innerHTML = suggestion;
     shiftBox.style.display = "block";
   } else {
