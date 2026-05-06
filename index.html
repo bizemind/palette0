@@ -318,12 +318,44 @@ body {
   margin-top: 3px;
   letter-spacing: 0.04em;
 }
-.result-principle {
-  font-size: 13px;
-  font-style: italic;
+.result-category {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
   color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
+.result-principle {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--text);
   margin-top: 4px;
   line-height: 1.5;
+  font-weight: 400;
+}
+.domain-explains {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.domain-line {
+  display: flex;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.domain-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  flex-shrink: 0;
+  padding-top: 2px;
+  width: 38px;
 }
 
 /* Effect alignment score */
@@ -599,12 +631,14 @@ body {
     <div id="result" style="display:none">
       <div class="result-swatch-row">
         <div id="resultSwatch" class="result-swatch"></div>
-        <div>
+        <div style="flex:1">
+          <div id="resultCategory" class="result-category"></div>
           <div id="resultName" class="result-name"></div>
           <div id="resultSub" class="result-sub"></div>
-          <div id="resultPrinciple" class="result-principle"></div>
         </div>
       </div>
+      <div id="resultPrinciple" class="result-principle"></div>
+      <div class="domain-explains" id="domainExplains"></div>
 
       <div id="alignmentBox" class="alignment" style="display:none">
         <div class="alignment-label">Alignment with <span id="alignmentEffect"></span></div>
@@ -642,8 +676,11 @@ body {
 const GROUPS = [
   {
     key: "yellow", name: "Yellow", color: "#F5C518",
-    principle: "Fast, bright, and dominant — powerful in the right proportion, unstable alone.",
-    food: "Simple carbs — quick energy, real but short-lived.",
+    category: "ACTIVATION",
+    principle: "Activates fast. The effect is real but short. Needs support to last.",
+    colorExplain: "Yellow pigment brightens a mix immediately but fades or gets overridden without a stabilising base.",
+    foodExplain: "Simple carbs deliver quick energy that drops sharply without protein or fat to anchor it.",
+    food: "Simple Carbs",
     ingredients: [
       { name: "White Rice", emoji: "🍚" },
       { name: "Banana",     emoji: "🍌" },
@@ -653,8 +690,11 @@ const GROUPS = [
   },
   {
     key: "orange", name: "Orange", color: "#E8763A",
-    principle: "Warm and bridging — neither extreme, but essential for depth.",
-    food: "Complex carbs — slower energy, more sustained.",
+    category: "ACTIVATION",
+    principle: "Extends without dominating. The sustaining middle that keeps everything else going.",
+    colorExplain: "Orange extends a mix's warmth and prevents early collapse without pulling it in a new direction.",
+    foodExplain: "Complex carbs sustain energy beyond the first hour without spiking or crashing.",
+    food: "Complex Carbs",
     ingredients: [
       { name: "Sweet Potato", emoji: "🍠" },
       { name: "Oats",         emoji: "🌾" },
@@ -664,8 +704,11 @@ const GROUPS = [
   },
   {
     key: "red", name: "Red", color: "#C94040",
-    principle: "Structural and intense — the foundation that holds everything else together.",
-    food: "Protein — builds and repairs. Sets the foundation of any meal.",
+    category: "STRUCTURE",
+    principle: "Sets the foundation. Everything else is built on this or it doesn't hold.",
+    colorExplain: "Red anchors a mix with density and direction. Remove it and the composition loses its centre.",
+    foodExplain: "Protein builds and repairs. A meal without it has no structural staying power.",
+    food: "Protein",
     ingredients: [
       { name: "Lentils", emoji: "🫘" },
       { name: "Eggs",    emoji: "🥚" },
@@ -675,8 +718,11 @@ const GROUPS = [
   },
   {
     key: "blue", name: "Blue", color: "#4A7FA5",
-    principle: "Cool and moderating — slows the pace, deepens the outcome.",
-    food: "Healthy fats — slows absorption, moderates intensity, sustains.",
+    category: "MODULATION",
+    principle: "Moderates and slows. Reduces spikes, extends duration, stabilises the whole.",
+    colorExplain: "Blue cools a mix, tempers fast-shifting hues, and keeps the composition from running hot.",
+    foodExplain: "Healthy fats slow digestion and absorption, moderating energy spikes and extending fullness.",
+    food: "Healthy Fats",
     ingredients: [
       { name: "Olive Oil", emoji: "🫒" },
       { name: "Avocado",   emoji: "🥑" },
@@ -686,8 +732,11 @@ const GROUPS = [
   },
   {
     key: "purple", name: "Purple", color: "#7B5EA7",
-    principle: "Subtle and protective — works beneath the surface, easy to overlook, hard to replace.",
-    food: "Phytonutrients — protective, restorative, easy to overlook.",
+    category: "PROTECTION",
+    principle: "Protective and cumulative. Invisible in the short term, irreplaceable over time.",
+    colorExplain: "Purple neutralises dominance and pulls an overextended mix back toward balance.",
+    foodExplain: "Phytonutrients work at the cellular level — reducing inflammation, protecting over time. Most people notice them only when they're missing.",
+    food: "Phytonutrients",
     ingredients: [
       { name: "Blueberries", emoji: "🫐" },
       { name: "Beetroot",    emoji: "🫚" },
@@ -697,8 +746,11 @@ const GROUPS = [
   },
   {
     key: "black", name: "Black", color: "#2A2420",
-    principle: "Concentrated and transformative — a little is powerful, too much is destructive.",
-    food: "Spices — transforms in small quantities. Overused, it overwhelms.",
+    category: "INTENSITY",
+    principle: "Transforms in small quantities. Excess doesn't add — it takes over.",
+    colorExplain: "A small amount of black deepens and grounds a mix. Too much and it consumes everything around it.",
+    foodExplain: "Spices transform the character of a meal in tiny doses. Overused, they become the only thing you taste.",
+    food: "Spices",
     ingredients: [
       { name: "Black Pepper",   emoji: "🌶" },
       { name: "Cumin",          emoji: "🌱" },
@@ -708,8 +760,11 @@ const GROUPS = [
   },
   {
     key: "green", name: "Green", color: "#4A8C5C",
-    principle: "Grounding and clearing — supports everything else, often the first thing skipped.",
-    food: "Fibre + greens — clears, regulates, supports everything else.",
+    category: "REGULATION",
+    principle: "Regulates and clears. Prevents accumulation. The system breaks down without it.",
+    colorExplain: "Green stabilises a mix and holds its direction, preventing the composition from drifting or collapsing.",
+    foodExplain: "Fibre and greens move things through, regulate digestion, and support every other nutrient's function.",
+    food: "Fibre & Greens",
     ingredients: [
       { name: "Spinach",  emoji: "🥬" },
       { name: "Broccoli", emoji: "🥦" },
@@ -719,8 +774,11 @@ const GROUPS = [
   },
   {
     key: "brown", name: "Brown", color: "#7A5C3A",
-    principle: "Earthy and sustaining — no drama, just steady nourishment over time.",
-    food: "Whole grains + legumes — slow-digesting, deeply nourishing.",
+    category: "FOUNDATION",
+    principle: "Slow, dense, sustaining. Holds the composition over the long arc.",
+    colorExplain: "Brown grounds a mix with quiet stability. It doesn't shift easily and doesn't ask for attention.",
+    foodExplain: "Whole grains and legumes digest slowly, providing sustained energy and lasting structure without peaks.",
+    food: "Whole Grains & Legumes",
     ingredients: [
       { name: "Quinoa",      emoji: "🌾" },
       { name: "Whole Wheat", emoji: "🫓" },
@@ -1209,9 +1267,19 @@ function updateResult() {
 
   // Result
   document.getElementById("resultSwatch").style.background = hex;
-  document.getElementById("resultName").textContent = profileName;
+  document.getElementById("resultCategory").textContent = dominantGroup.category;
+  document.getElementById("resultName").textContent = dominantGroup.name;
   document.getElementById("resultSub").textContent = dominantGroup.food;
   document.getElementById("resultPrinciple").textContent = `"${dominantGroup.principle}"`;
+  document.getElementById("domainExplains").innerHTML = `
+    <div class="domain-line">
+      <span class="domain-tag">Colour</span>
+      <span>${dominantGroup.colorExplain}</span>
+    </div>
+    <div class="domain-line">
+      <span class="domain-tag">Food</span>
+      <span>${dominantGroup.foodExplain}</span>
+    </div>`;
 
   // Alignment
   const alignmentBox = document.getElementById("alignmentBox");
