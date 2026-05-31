@@ -522,6 +522,188 @@ body {
 }
 .btn:active { opacity: 0.7; }
 
+/* API key card */
+.key-input-wrap {
+  position: relative;
+  margin-bottom: 10px;
+}
+.key-input {
+  width: 100%;
+  padding: 9px 36px 9px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+  letter-spacing: 0.04em;
+}
+.key-input::placeholder { color: var(--faint); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 0; }
+.key-input:focus { border-color: var(--muted); }
+.key-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--faint);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.key-toggle:hover { color: var(--muted); }
+.key-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.key-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+}
+.key-status.valid { color: #4A8C5C; }
+.key-status.invalid { color: #C94040; }
+.key-forget {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--faint);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.key-forget:hover { color: var(--muted); }
+
+/* Input mode toggle */
+.mode-toggle {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.mode-btn {
+  flex: 1;
+  padding: 8px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.mode-btn.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+/* Image upload area */
+.image-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+  margin-bottom: 10px;
+}
+.image-zone:hover { border-color: var(--muted); background: var(--chip); }
+.image-zone.has-image { padding: 0; border-style: solid; overflow: hidden; }
+.image-zone input[type=file] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.image-zone-label {
+  font-size: 14px;
+  font-style: italic;
+  color: var(--faint);
+  pointer-events: none;
+  display: block;
+  margin-bottom: 4px;
+}
+.image-zone-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--faint);
+  pointer-events: none;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.image-preview-img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-md);
+}
+.image-actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.analyse-btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--text);
+  border-radius: var(--radius-sm);
+  background: var(--text);
+  color: var(--bg);
+  cursor: pointer;
+  transition: opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.analyse-btn:hover { opacity: 0.85; }
+.analyse-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.image-clear-btn {
+  padding: 10px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.analyse-status {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 6px 0;
+  display: none;
+}
+.analyse-status.visible { display: block; }
+
 /* Search */
 .search-wrap {
   position: relative;
@@ -619,10 +801,45 @@ body {
     <span id="previewSub" class="preview-sub"></span>
   </div>
 
+  <!-- API Key -->
+  <div class="card" id="keyCard" style="display:none">
+    <div class="card-label">Anthropic API Key <span style="font-size:9px;color:var(--faint)">— for plate image analysis</span></div>
+    <div class="key-input-wrap">
+      <input class="key-input" id="keyInput" type="password" placeholder="Paste your sk-ant- key to enable image analysis" autocomplete="off" spellcheck="false">
+      <button class="key-toggle" id="keyToggle" onclick="toggleKeyVisibility()">Show</button>
+    </div>
+    <div class="key-row">
+      <span class="key-status" id="keyStatus"></span>
+      <button class="key-forget" id="keyForget" style="display:none" onclick="forgetKey()">Forget key</button>
+    </div>
+  </div>
+
   <!-- Step 2: Ingredient selection -->
   <div class="card">
-    <div class="card-label">Select your ingredients</div>
-    <div id="ingredientGrid"></div>
+    <div class="card-label">Add your ingredients</div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeManual" onclick="setMode('manual')">Select manually</button>
+      <button class="mode-btn" id="modeImage" onclick="setMode('image')">Photograph plate</button>
+    </div>
+
+    <!-- Image mode -->
+    <div id="imageMode" style="display:none">
+      <div class="image-zone" id="imageZone">
+        <input type="file" id="imageFile" accept="image/*" capture="environment" onchange="handleImageFile(event)">
+        <span class="image-zone-label">Tap to photograph or upload your plate</span>
+        <span class="image-zone-sub">jpg · png · webp</span>
+      </div>
+      <div class="image-actions" id="imageActions" style="display:none">
+        <button class="analyse-btn" id="analyseBtn" onclick="analysePlate()">Analyse plate</button>
+        <button class="image-clear-btn" onclick="clearImage()">✕</button>
+      </div>
+      <div class="analyse-status" id="analyseStatus"></div>
+    </div>
+
+    <!-- Manual mode -->
+    <div id="manualMode">
+      <div id="ingredientGrid"></div>
+    </div>
   </div>
 
   <!-- Result -->
@@ -1098,7 +1315,215 @@ const EXTENDED = {
 /* ─── State ─── */
 const selected = new Set();
 let activeEffect = null;
-let searchResultKeys = new Set(); // tracks dynamically added search cards
+let searchResultKeys = new Set();
+let currentImageBase64 = null;
+let currentMode = 'manual';
+
+/* ─── API Key handling ─── */
+function initKey() {
+  const saved = localStorage.getItem('palette_api_key');
+  if (saved) {
+    document.getElementById('keyInput').value = saved;
+    setKeyStatus(saved);
+  }
+}
+
+document.getElementById('keyInput').addEventListener('input', function() {
+  const val = this.value.trim();
+  localStorage.setItem('palette_api_key', val);
+  setKeyStatus(val);
+});
+
+function setKeyStatus(val) {
+  const status = document.getElementById('keyStatus');
+  const forget = document.getElementById('keyForget');
+  if (!val) {
+    status.textContent = '';
+    status.className = 'key-status';
+    forget.style.display = 'none';
+    return;
+  }
+  if (val.startsWith('sk-ant-')) {
+    status.textContent = '✓ Key looks valid';
+    status.className = 'key-status valid';
+    forget.style.display = 'block';
+  } else {
+    status.textContent = 'Key should start with sk-ant-';
+    status.className = 'key-status invalid';
+    forget.style.display = 'block';
+  }
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('keyInput');
+  const btn = document.getElementById('keyToggle');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    input.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+
+function forgetKey() {
+  localStorage.removeItem('palette_api_key');
+  document.getElementById('keyInput').value = '';
+  setKeyStatus('');
+}
+
+initKey();
+
+/* ─── Mode toggle ─── */
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeManual').classList.toggle('active', mode === 'manual');
+  document.getElementById('modeImage').classList.toggle('active', mode === 'image');
+  document.getElementById('manualMode').style.display = mode === 'manual' ? 'block' : 'none';
+  document.getElementById('imageMode').style.display = mode === 'image' ? 'block' : 'none';
+  document.getElementById('keyCard').style.display = mode === 'image' ? 'block' : 'none';
+}
+
+/* ─── Image handling ─── */
+function handleImageFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const dataUrl = e.target.result;
+    currentImageBase64 = dataUrl.split(',')[1];
+    const zone = document.getElementById('imageZone');
+    zone.classList.add('has-image');
+    zone.innerHTML = `<img class="image-preview-img" src="${dataUrl}" alt="Plate">`;
+    document.getElementById('imageActions').style.display = 'flex';
+    document.getElementById('analyseStatus').classList.remove('visible');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImage() {
+  currentImageBase64 = null;
+  const zone = document.getElementById('imageZone');
+  zone.classList.remove('has-image');
+  zone.innerHTML = `
+    <input type="file" id="imageFile" accept="image/*" capture="environment" onchange="handleImageFile(event)">
+    <span class="image-zone-label">Tap to photograph or upload your plate</span>
+    <span class="image-zone-sub">jpg · png · webp</span>`;
+  document.getElementById('imageActions').style.display = 'none';
+  document.getElementById('analyseStatus').classList.remove('visible');
+}
+
+async function analysePlate() {
+  const apiKey = (localStorage.getItem('palette_api_key') || '').trim();
+  if (!apiKey.startsWith('sk-ant-')) {
+    showAnalyseStatus('Please enter a valid API key above first.', true);
+    return;
+  }
+  if (!currentImageBase64) {
+    showAnalyseStatus('Please select an image first.', true);
+    return;
+  }
+
+  const btn = document.getElementById('analyseBtn');
+  btn.disabled = true;
+  showAnalyseStatus('Analysing your plate…');
+
+  const systemPrompt = `You are a food and colour composition analyser for a tool called Palette by Creatis.
+
+Your job is to identify every visible food ingredient on the plate in the image, and assign each to exactly one of these 8 colour groups based on its nutritional behaviour:
+
+- yellow: Simple carbs (white rice, bread, sugar, fruit juice, refined grains, sweet fruit)
+- orange: Complex carbs (sweet potato, oats, whole fruit, root vegetables, starchy vegetables)
+- red: Protein (meat, fish, eggs, legumes, dairy, tofu, tempeh, paneer)
+- blue: Healthy fats (oils, nuts, seeds, avocado, fatty fish, ghee, butter)
+- purple: Phytonutrients (berries, beets, dark vegetables, turmeric, moringa, fermented foods)
+- black: Spices & stimulants (pepper, cumin, chilli, cinnamon, coffee, dark chocolate, herbs used as seasoning)
+- green: Fibre & greens (leafy greens, cruciferous vegetables, cucumber, celery, herbs used as food)
+- brown: Whole grains & legumes (brown rice, quinoa, lentils, chickpeas, whole wheat, millet)
+
+Return ONLY a valid JSON object with no preamble, no markdown, no explanation. Format:
+{
+  "ingredients": [
+    { "name": "ingredient name", "group": "group key", "confidence": "high|medium|low" }
+  ]
+}
+
+If you cannot identify any food, return: { "ingredients": [] }`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: [{
+            type: 'image',
+            source: { type: 'base64', media_type: 'image/jpeg', data: currentImageBase64 }
+          }, {
+            type: 'text',
+            text: 'Identify the ingredients on this plate and assign each to a colour group.'
+          }]
+        }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const raw = data.content.map(c => c.text || '').join('').trim();
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    if (!parsed.ingredients || parsed.ingredients.length === 0) {
+      showAnalyseStatus('No ingredients detected. Try a clearer photo.', true);
+      btn.disabled = false;
+      return;
+    }
+
+    // Map results to selected set
+    parsed.ingredients.forEach(item => {
+      const group = GROUPS.find(g => g.key === item.group);
+      if (!group) return;
+      const key = `${item.group}:img:${item.name.replace(/\s+/g,'-').toLowerCase()}`;
+      if (!selected.has(key)) {
+        selected.add(key);
+        // Register as virtual ingredient for pill display
+        if (!window._imgIngredients) window._imgIngredients = {};
+        window._imgIngredients[key] = { name: item.name, emoji: '📷', group: item.group };
+      }
+    });
+
+    const count = parsed.ingredients.length;
+    showAnalyseStatus(`${count} ingredient${count !== 1 ? 's' : ''} identified. Scroll down to see your composition.`);
+    updateResult();
+
+  } catch (err) {
+    showAnalyseStatus(`Error: ${err.message}`, true);
+  }
+
+  btn.disabled = false;
+}
+
+function showAnalyseStatus(msg, isError = false) {
+  const el = document.getElementById('analyseStatus');
+  el.textContent = msg;
+  el.style.color = isError ? 'var(--red, #C94040)' : 'var(--muted)';
+  el.classList.add('visible');
+}
+
+
 
 /* ─── Build effect pills ─── */
 const pillsContainer = document.getElementById("effectPills");
@@ -1361,8 +1786,8 @@ function updateResult() {
   const groupCounts = {};
   GROUPS.forEach(g => { groupCounts[g.key] = 0; });
   selected.forEach(key => {
-    const [groupKey] = key.split(':');
-    groupCounts[groupKey]++;
+    const groupKey = key.split(':')[0];
+    if (groupCounts.hasOwnProperty(groupKey)) groupCounts[groupKey]++;
   });
 
   const totalSelected = selected.size;
@@ -1440,12 +1865,14 @@ function updateResult() {
     const parts = key.split(':');
     const groupKey = parts[0];
     const group = GROUPS.find(g => g.key === groupKey);
+    if (!group) return;
     let ing;
     if (parts[1] === 'ext') {
-      // Extended ingredient — find by name slug
       const nameSlug = parts[2];
       const extended = EXTENDED[groupKey] || [];
       ing = extended.find(e => e.name.replace(/\s+/g,'-').toLowerCase() === nameSlug);
+    } else if (parts[1] === 'img') {
+      ing = window._imgIngredients && window._imgIngredients[key];
     } else {
       ing = group.ingredients[parseInt(parts[1])];
     }
@@ -1474,11 +1901,13 @@ function updateResult() {
 
 function clearAll() {
   selected.clear();
+  window._imgIngredients = {};
   document.querySelectorAll('.ingredient-card').forEach(c => {
     c.classList.remove("selected");
     c.style.borderColor = "var(--border)";
   });
   clearSearch();
+  clearImage();
   updateResult();
 }
 </script>
