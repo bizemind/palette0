@@ -522,72 +522,6 @@ body {
 }
 .btn:active { opacity: 0.7; }
 
-/* API key card */
-.key-input-wrap {
-  position: relative;
-  margin-bottom: 10px;
-}
-.key-input {
-  width: 100%;
-  padding: 9px 36px 9px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  outline: none;
-  transition: border-color 0.15s;
-  -webkit-appearance: none;
-  letter-spacing: 0.04em;
-}
-.key-input::placeholder { color: var(--faint); font-style: italic; font-family: 'Cormorant Garamond', serif; font-size: 14px; letter-spacing: 0; }
-.key-input:focus { border-color: var(--muted); }
-.key-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--faint);
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 2px 4px;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.key-toggle:hover { color: var(--muted); }
-.key-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-.key-status {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  color: var(--faint);
-}
-.key-status.valid { color: #4A8C5C; }
-.key-status.invalid { color: #C94040; }
-.key-forget {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--faint);
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  letter-spacing: 0.04em;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.key-forget:hover { color: var(--muted); }
-
 /* Input mode toggle */
 .mode-toggle {
   display: flex;
@@ -799,19 +733,6 @@ body {
   <div id="preview" class="preview">
     <span id="previewLabel" class="preview-label"></span>
     <span id="previewSub" class="preview-sub"></span>
-  </div>
-
-  <!-- API Key -->
-  <div class="card" id="keyCard" style="display:none">
-    <div class="card-label">Anthropic API Key <span style="font-size:9px;color:var(--faint)">— for plate image analysis</span></div>
-    <div class="key-input-wrap">
-      <input class="key-input" id="keyInput" type="password" placeholder="Paste your sk-ant- key to enable image analysis" autocomplete="off" spellcheck="false">
-      <button class="key-toggle" id="keyToggle" onclick="toggleKeyVisibility()">Show</button>
-    </div>
-    <div class="key-row">
-      <span class="key-status" id="keyStatus"></span>
-      <button class="key-forget" id="keyForget" style="display:none" onclick="forgetKey()">Forget key</button>
-    </div>
   </div>
 
   <!-- Step 2: Ingredient selection -->
@@ -1319,60 +1240,8 @@ let searchResultKeys = new Set();
 let currentImageBase64 = null;
 let currentMode = 'manual';
 
-/* ─── API Key handling ─── */
-function initKey() {
-  const saved = localStorage.getItem('palette_api_key');
-  if (saved) {
-    document.getElementById('keyInput').value = saved;
-    setKeyStatus(saved);
-  }
-}
-
-document.getElementById('keyInput').addEventListener('input', function() {
-  const val = this.value.trim();
-  localStorage.setItem('palette_api_key', val);
-  setKeyStatus(val);
-});
-
-function setKeyStatus(val) {
-  const status = document.getElementById('keyStatus');
-  const forget = document.getElementById('keyForget');
-  if (!val) {
-    status.textContent = '';
-    status.className = 'key-status';
-    forget.style.display = 'none';
-    return;
-  }
-  if (val.startsWith('sk-ant-')) {
-    status.textContent = '✓ Key looks valid';
-    status.className = 'key-status valid';
-    forget.style.display = 'block';
-  } else {
-    status.textContent = 'Key should start with sk-ant-';
-    status.className = 'key-status invalid';
-    forget.style.display = 'block';
-  }
-}
-
-function toggleKeyVisibility() {
-  const input = document.getElementById('keyInput');
-  const btn = document.getElementById('keyToggle');
-  if (input.type === 'password') {
-    input.type = 'text';
-    btn.textContent = 'Hide';
-  } else {
-    input.type = 'password';
-    btn.textContent = 'Show';
-  }
-}
-
-function forgetKey() {
-  localStorage.removeItem('palette_api_key');
-  document.getElementById('keyInput').value = '';
-  setKeyStatus('');
-}
-
-initKey();
+/* ─── Proxy endpoint ─── */
+const PROXY_URL = 'https://palette0.vercel.app/api/analyse';
 
 /* ─── Mode toggle ─── */
 function setMode(mode) {
@@ -1381,7 +1250,6 @@ function setMode(mode) {
   document.getElementById('modeImage').classList.toggle('active', mode === 'image');
   document.getElementById('manualMode').style.display = mode === 'manual' ? 'block' : 'none';
   document.getElementById('imageMode').style.display = mode === 'image' ? 'block' : 'none';
-  document.getElementById('keyCard').style.display = mode === 'image' ? 'block' : 'none';
 }
 
 /* ─── Image handling ─── */
@@ -1414,11 +1282,6 @@ function clearImage() {
 }
 
 async function analysePlate() {
-  const apiKey = (localStorage.getItem('palette_api_key') || '').trim();
-  if (!apiKey.startsWith('sk-ant-')) {
-    showAnalyseStatus('Please enter a valid API key above first.', true);
-    return;
-  }
   if (!currentImageBase64) {
     showAnalyseStatus('Please select an image first.', true);
     return;
@@ -1428,9 +1291,9 @@ async function analysePlate() {
   btn.disabled = true;
   showAnalyseStatus('Analysing your plate…');
 
-  const systemPrompt = `You are a food and colour composition analyser for a tool called Palette by Creatis.
+  const prompt = `You are a food and colour composition analyser for a tool called Palette by Creatis.
 
-Your job is to identify every visible food ingredient on the plate in the image, and assign each to exactly one of these 8 colour groups based on its nutritional behaviour:
+Identify every visible food ingredient on the plate in this image, and assign each to exactly one of these 8 colour groups based on its nutritional behaviour:
 
 - yellow: Simple carbs (white rice, bread, sugar, fruit juice, refined grains, sweet fruit)
 - orange: Complex carbs (sweet potato, oats, whole fruit, root vegetables, starchy vegetables)
@@ -1441,7 +1304,7 @@ Your job is to identify every visible food ingredient on the plate in the image,
 - green: Fibre & greens (leafy greens, cruciferous vegetables, cucumber, celery, herbs used as food)
 - brown: Whole grains & legumes (brown rice, quinoa, lentils, chickpeas, whole wheat, millet)
 
-Return ONLY a valid JSON object with no preamble, no markdown, no explanation. Format:
+Return ONLY a valid JSON object with no preamble, no markdown, no explanation:
 {
   "ingredients": [
     { "name": "ingredient name", "group": "group key", "confidence": "high|medium|low" }
@@ -1451,38 +1314,27 @@ Return ONLY a valid JSON object with no preamble, no markdown, no explanation. F
 If you cannot identify any food, return: { "ingredients": [] }`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(PROXY_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{
-          role: 'user',
-          content: [{
-            type: 'image',
-            source: { type: 'base64', media_type: 'image/jpeg', data: currentImageBase64 }
-          }, {
-            type: 'text',
-            text: 'Identify the ingredients on this plate and assign each to a colour group.'
-          }]
-        }]
+        contents: [{
+          parts: [
+            { inlineData: { mimeType: 'image/jpeg', data: currentImageBase64 } },
+            { text: prompt }
+          ]
+        }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 }
       })
     });
 
     if (!response.ok) {
       const err = await response.json();
-      throw new Error(err.error?.message || `API error ${response.status}`);
+      throw new Error(err.error?.message || `Error ${response.status}`);
     }
 
     const data = await response.json();
-    const raw = data.content.map(c => c.text || '').join('').trim();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
@@ -1492,14 +1344,12 @@ If you cannot identify any food, return: { "ingredients": [] }`;
       return;
     }
 
-    // Map results to selected set
     parsed.ingredients.forEach(item => {
       const group = GROUPS.find(g => g.key === item.group);
       if (!group) return;
       const key = `${item.group}:img:${item.name.replace(/\s+/g,'-').toLowerCase()}`;
       if (!selected.has(key)) {
         selected.add(key);
-        // Register as virtual ingredient for pill display
         if (!window._imgIngredients) window._imgIngredients = {};
         window._imgIngredients[key] = { name: item.name, emoji: '📷', group: item.group };
       }
