@@ -4,723 +4,174 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Palette — by Creatis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap');
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg: #F5F2ED;
-  --surface: #FDFCFA;
-  --border: #E2DDD6;
-  --text: #1C1A17;
-  --muted: #8A8278;
-  --faint: #C4BDB4;
-  --chip: #EEE9E2;
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-pill: 99px;
-
-  --yellow:  #F5C518;
-  --orange:  #E8763A;
-  --red:     #C94040;
-  --blue:    #4A7FA5;
-  --purple:  #7B5EA7;
-  --black:   #2A2420;
-  --green:   #4A8C5C;
-  --brown:   #7A5C3A;
+  --bg: #f6f6fb; --surface: #ffffff; --border: #e6e6ef; --chip: #f0f0f7;
+  --text: #1d1e2c; --text-2: #4a4d6a; --muted: #8b8da0; --faint: #b4b6c6;
+  --divider: #ececf3; --accent: #7c5cff; --accent-soft: #f3f0ff; --accent-line: #e1daff; --accent-ink: #6d55f0;
+  --red: #b42318;
+  --radius-sm: 12px; --radius-md: 16px; --radius-lg: 24px; --radius-pill: 999px;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141210;
-    --surface: #1E1C18;
-    --border: #2E2A24;
-    --text: #F0EDE8;
-    --muted: #8A8278;
-    --faint: #4A4540;
-    --chip: #252218;
-  }
-}
-
 html { -webkit-text-size-adjust: 100%; }
+body { font-family: "Plus Jakarta Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh;
+  padding: env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0); }
+button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.wrap { max-width: 28rem; margin: 0 auto; }
 
-body {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  padding: env(safe-area-inset-top,0) env(safe-area-inset-right,0) env(safe-area-inset-bottom,0) env(safe-area-inset-left,0);
-}
+/* Hero */
+.hero { background: linear-gradient(180deg, transparent 55%, var(--bg) 100%), linear-gradient(120deg, #cdeff0, #d9dafc 58%, #e8d8fb);
+  padding: 20px 20px 72px; }
+.hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font-size: 13px; color: var(--text-2); font-weight: 500; }
+.headline { margin-top: 22px; font-size: 30px; line-height: 1.1; font-weight: 700; letter-spacing: -0.03em;
+  background: linear-gradient(90deg, #0f6f78, #4b2394); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero-links { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-link { font-size: 12px; font-weight: 600; color: var(--text-2); text-decoration: none;
+  background: rgba(255,255,255,0.6); border: 1px solid #dcdcf0; border-radius: var(--radius-pill); padding: 5px 12px; }
 
-.app {
-  max-width: 560px;
-  margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
-}
-
-/* Header */
-.header {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 1.75rem;
-}
-.header h1 {
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: var(--text);
-}
-.header span {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* Cards */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 1.125rem 1.25rem;
-  margin-bottom: 1rem;
-}
-.card-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 14px;
-}
+/* Layout */
+.app { padding: 0 12px 40px; }
+.app > .card:first-child { margin-top: -44px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
+.card-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
 
 /* Effect pills */
-.effect-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-.effect-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 15px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.effect-pill:hover { color: var(--text); border-color: var(--faint); }
+.effect-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.effect-pill { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--radius-pill); border: none;
+  background: var(--chip); font-size: 13px; font-weight: 600; color: var(--text-2); transition: background .15s, color .15s; touch-action: manipulation; }
 .effect-pill:active { transform: scale(0.97); }
-.effect-pill.active {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
-}
-.effect-pill-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.effect-pill.active .effect-pill-dot {
-  opacity: 1;
-  background: var(--bg);
-}
-
-/* Effect description */
-.effect-desc {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 13px;
-  font-style: italic;
-  color: var(--muted);
-  line-height: 1.6;
-  display: none;
-}
+.effect-pill.active { background: var(--accent); color: #fff; }
+.effect-pill-dot { display: none; }
+.effect-desc { margin-top: 12px; font-size: 12px; color: var(--text-2); line-height: 1.5; padding: 10px 12px; background: var(--chip); border-radius: var(--radius-sm); display: none; }
 .effect-desc.visible { display: block; }
 
-/* Colour preview */
-.preview {
-  border-radius: var(--radius-md);
-  height: 100px;
-  margin-bottom: 1rem;
-  border: 1px solid var(--border);
-  background: var(--chip);
-  transition: background 0.6s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  position: relative;
-  overflow: hidden;
-}
-.preview-label {
-  font-size: 18px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.9);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  display: none;
-  letter-spacing: 0.01em;
-}
-.preview-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: rgba(255,255,255,0.7);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-  display: none;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.preview.active .preview-label,
-.preview.active .preview-sub { display: block; }
+/* Preview */
+.preview { border-radius: var(--radius-lg); height: 100px; margin-bottom: 12px; border: 1px solid var(--border); background: var(--chip);
+  transition: background 0.6s ease; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; overflow: hidden; }
+.preview-label { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; color: rgba(255,255,255,0.95); text-shadow: 0 1px 4px rgba(0,0,0,0.3); display: none; }
+.preview-sub { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.85); text-shadow: 0 1px 3px rgba(0,0,0,0.3); display: none; }
+.preview.active .preview-label, .preview.active .preview-sub { display: block; }
 
-/* Colour group sections */
-.group-section { margin-bottom: 1.25rem; }
-.group-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.group-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.group-name {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-.group-weight-badge {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 2px 7px;
-  border-radius: var(--radius-pill);
-  margin-left: auto;
-  transition: all 0.3s;
-}
-.group-weight-badge.primary {
-  background: var(--text);
-  color: var(--bg);
-}
-.group-weight-badge.supporting {
-  background: var(--chip);
-  color: var(--muted);
-  border: 1px solid var(--border);
-}
-.group-weight-badge.suppressed {
-  background: transparent;
-  color: var(--faint);
-  border: 1px dashed var(--border);
-}
-.group-weight-badge.neutral {
-  display: none;
-}
+/* Mode toggle (segmented) */
+.mode-toggle { display: grid; grid-template-columns: 1fr 1fr; background: var(--chip); padding: 4px; border-radius: var(--radius-pill); margin-bottom: 14px; }
+.mode-btn { border: none; border-radius: var(--radius-pill); padding: 9px 4px; font-size: 13px; font-weight: 600; color: var(--text-2); background: transparent; }
+.mode-btn.active { background: var(--accent); color: #fff; }
 
-/* Group dimming */
-.group-section.suppressed .ingredient-card {
-  opacity: 0.45;
-}
-.group-section.suppressed .group-name {
-  color: var(--faint);
-}
-
-/* Ingredient cards */
-.ingredient-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-.ingredient-card {
-  border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  padding: 10px 6px 8px;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.15s, transform 0.12s, background 0.15s, opacity 0.3s;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  position: relative;
-}
-.ingredient-card:hover { transform: translateY(-1px); }
-.ingredient-card:active { transform: scale(0.96); }
-.ingredient-card.selected {
-  background: var(--chip);
-}
-.ingredient-card.selected::after {
-  content: '✓';
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  font-size: 9px;
-  color: var(--muted);
-}
-.ingredient-emoji {
-  font-size: 22px;
-  display: block;
-  margin-bottom: 5px;
-  line-height: 1;
-}
-.ingredient-name {
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.3;
-}
-
-/* Result card */
-.result-swatch-row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 1rem;
-}
-.result-swatch {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  flex-shrink: 0;
-  transition: background 0.4s;
-}
-.result-name {
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-}
-.result-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 3px;
-  letter-spacing: 0.04em;
-}
-.result-category {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 3px;
-}
-.result-principle {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--text);
-  margin-top: 4px;
-  line-height: 1.5;
-  font-weight: 400;
-}
-.domain-explains {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.domain-line {
-  display: flex;
-  gap: 8px;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--muted);
-}
-.domain-tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--faint);
-  flex-shrink: 0;
-  padding-top: 2px;
-  width: 38px;
-}
-
-/* Effect alignment score */
-.alignment {
-  margin-top: 1rem;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--chip);
-}
-.alignment-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-}
-.alignment-bar-track {
-  height: 4px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 6px;
-}
-.alignment-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  background: var(--text);
-  transition: width 0.5s ease;
-}
-.alignment-text {
-  font-size: 13px;
-  color: var(--muted);
-  font-style: italic;
-  line-height: 1.5;
-}
-
-/* Composition bars */
-.composition { margin-top: 1rem; }
-.comp-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-}
-.comp-bar-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-.comp-bar-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  width: 54px;
-  flex-shrink: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.comp-bar-track {
-  flex: 1;
-  height: 5px;
-  background: var(--chip);
-  border-radius: 3px;
-  overflow: hidden;
-}
-.comp-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.5s ease;
-}
-.comp-count {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--faint);
-  width: 16px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-/* Selected ingredients display */
-.selected-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-}
-.selected-pill {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  padding: 4px 10px 4px 6px;
-  border-radius: var(--radius-pill);
-  background: var(--chip);
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-.pill-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* Shift suggestion */
-.shift-box {
-  margin-top: 1rem;
-  padding: 12px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--chip);
-}
-.shift-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
-.shift-text {
-  font-size: 14px;
-  line-height: 1.6;
-  color: var(--text);
-}
-.shift-ingredient {
-  font-weight: 500;
-  font-style: italic;
-}
-
-/* Empty state */
-.empty {
-  font-size: 14px;
-  color: var(--faint);
-  text-align: center;
-  padding: 1.5rem 0;
-  font-style: italic;
-}
-
-/* Actions */
-.action-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 1rem;
-}
-.btn {
-  padding: 9px 16px;
-  font-size: 13px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.04em;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn:active { opacity: 0.7; }
-
-/* Input mode toggle */
-.mode-toggle {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 14px;
-}
-.mode-btn {
-  flex: 1;
-  padding: 8px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.mode-btn.active {
-  background: var(--text);
-  border-color: var(--text);
-  color: var(--bg);
-}
-
-/* Image upload area */
-.image-zone {
-  border: 1.5px dashed var(--border);
-  border-radius: var(--radius-md);
-  padding: 2rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
-  position: relative;
-  margin-bottom: 10px;
-}
-.image-zone:hover { border-color: var(--muted); background: var(--chip); }
-.image-zone.has-image { padding: 0; border-style: solid; overflow: hidden; }
-.image-zone input[type=file] {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
-}
-.image-zone-label {
-  font-size: 14px;
-  font-style: italic;
-  color: var(--faint);
-  pointer-events: none;
-  display: block;
-  margin-bottom: 4px;
-}
-.image-zone-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--faint);
-  pointer-events: none;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.image-preview-img {
-  width: 100%;
-  max-height: 260px;
-  object-fit: cover;
-  display: block;
-  border-radius: var(--radius-md);
-}
-.image-actions {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.analyse-btn {
-  flex: 1;
-  padding: 10px 16px;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  border: 1px solid var(--text);
-  border-radius: var(--radius-sm);
-  background: var(--text);
-  color: var(--bg);
-  cursor: pointer;
-  transition: opacity 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.analyse-btn:hover { opacity: 0.85; }
-.analyse-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.image-clear-btn {
-  padding: 10px 14px;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.analyse-status {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: 0.04em;
-  text-align: center;
-  padding: 6px 0;
-  display: none;
-}
+/* Image mode */
+.image-zone { border: 1.5px dashed #dcdcf0; border-radius: var(--radius-md); padding: 1.75rem 1rem; text-align: center; cursor: pointer;
+  background: var(--chip); position: relative; margin-bottom: 10px; }
+.image-zone.has-image { padding: 0; border-style: solid; border-color: var(--border); overflow: hidden; }
+.image-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.image-zone-label { font-size: 13px; font-weight: 600; pointer-events: none; display: block; margin-bottom: 4px; }
+.image-zone-sub { font-size: 11px; color: var(--muted); pointer-events: none; }
+.image-preview-img { width: 100%; max-height: 260px; object-fit: cover; display: block; }
+.image-actions { display: flex; gap: 8px; margin-bottom: 10px; }
+.analyse-btn { flex: 1; padding: 12px 16px; font-size: 14px; font-weight: 600; border: none; border-radius: var(--radius-pill); background: var(--accent); color: #fff; }
+.analyse-btn:active { transform: scale(0.98); }
+.analyse-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.image-clear-btn { padding: 12px 16px; font-size: 14px; font-weight: 600; border: none; border-radius: var(--radius-pill); background: var(--chip); color: var(--text); }
+.analyse-status { font-size: 12px; color: var(--text-2); text-align: center; padding: 6px 0; display: none; }
 .analyse-status.visible { display: block; }
 
 /* Search */
-.search-wrap {
-  position: relative;
-  margin-bottom: 1.25rem;
-}
-.search-input {
-  width: 100%;
-  padding: 9px 36px 9px 12px;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 15px;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  outline: none;
-  transition: border-color 0.15s;
-  -webkit-appearance: none;
-}
-.search-input::placeholder { color: var(--faint); font-style: italic; }
-.search-input:focus { border-color: var(--muted); }
-.search-clear {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--faint);
-  cursor: pointer;
-  display: none;
-  background: none;
-  border: none;
-  padding: 2px 4px;
-  line-height: 1;
-}
+.search-wrap { position: relative; margin-bottom: 16px; }
+.search-input { width: 100%; padding: 11px 40px 11px 16px; font: inherit; font-size: 15px; color: var(--text); background: var(--chip);
+  border: 1px solid transparent; border-radius: var(--radius-pill); outline: none; -webkit-appearance: none; }
+.search-input::placeholder { color: var(--muted); }
+.search-input:focus { background: var(--surface); border-color: var(--accent); }
+.search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--muted);
+  display: none; background: none; border: none; padding: 2px 4px; line-height: 1; }
 .search-clear.visible { display: block; }
-.search-clear:hover { color: var(--muted); }
-
-.search-results-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-  display: none;
-}
+.search-results-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 10px; display: none; }
 .search-results-label.visible { display: block; }
 
-.ingredient-card.search-result {
-  border-style: dashed;
-}
+/* Groups */
+.group-section { margin-bottom: 20px; }
+.group-section:last-child { margin-bottom: 0; }
+.group-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.group-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); }
+.group-name { font-size: 12px; font-weight: 600; color: var(--muted); }
+.group-weight-badge { font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: var(--radius-pill); margin-left: auto; }
+.group-weight-badge.primary { background: var(--accent); color: #fff; }
+.group-weight-badge.supporting { background: var(--accent-soft); color: var(--accent-ink); }
+.group-weight-badge.suppressed { background: var(--chip); color: var(--muted); }
+.group-weight-badge.neutral { display: none; }
+.group-section.suppressed .ingredient-card { opacity: 0.45; }
+.group-section.suppressed .group-name { color: var(--faint); }
+
+/* Ingredient cards */
+.ingredient-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ingredient-card { border-radius: var(--radius-md); border: 2px solid var(--border); background: var(--surface); padding: 10px 6px 8px;
+  text-align: center; cursor: pointer; transition: border-color .15s, transform .1s, background .15s, opacity .3s;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; position: relative; min-width: 0; }
+.ingredient-card:active { transform: scale(0.95); }
+.ingredient-card.selected { background: var(--chip); }
+.ingredient-card.selected::after { content: '✓'; position: absolute; top: 4px; right: 7px; font-size: 10px; font-weight: 700; color: var(--accent); }
+.ingredient-card.search-result { border-style: dashed; }
+.ingredient-emoji { font-size: 22px; display: block; margin-bottom: 5px; line-height: 1; }
+.ingredient-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; display: block; overflow-wrap: anywhere; }
+
+/* Result */
+.empty { font-size: 13px; color: var(--text-2); text-align: center; padding: 1.25rem 0; }
+.result-swatch-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.result-swatch { width: 56px; height: 56px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,0.08); flex-shrink: 0; transition: background .4s; }
+.result-category { font-size: 11px; font-weight: 600; color: var(--accent-ink); letter-spacing: 0.04em; margin-bottom: 2px; }
+.result-name { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+.result-sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+.result-principle { font-size: 14px; font-weight: 500; line-height: 1.5; margin-top: 4px; }
+.domain-explains { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.domain-line { display: flex; gap: 10px; font-size: 12px; line-height: 1.55; color: var(--text-2); }
+.domain-tag { font-size: 11px; font-weight: 600; color: var(--muted); flex-shrink: 0; width: 44px; padding-top: 1px; }
+
+.alignment { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--chip); }
+.alignment-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
+.alignment-label span { color: var(--text); }
+.alignment-bar-track { height: 8px; background: var(--surface); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: 8px; }
+.alignment-bar-fill { height: 100%; border-radius: var(--radius-pill); background: var(--accent); transition: width .5s ease; }
+.alignment-text { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+.composition { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--divider); }
+.comp-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+.comp-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.comp-bar-label { font-size: 12px; font-weight: 600; color: var(--text-2); width: 56px; flex-shrink: 0; }
+.comp-bar-track { flex: 1; height: 8px; background: var(--chip); border-radius: var(--radius-pill); overflow: hidden; }
+.comp-bar-fill { height: 100%; border-radius: var(--radius-pill); transition: width .5s ease; }
+.comp-count { font-size: 12px; font-weight: 600; color: var(--muted); width: 16px; text-align: right; flex-shrink: 0; }
+
+.selected-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--divider); }
+.selected-pills:empty { display: none; }
+.selected-pill { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 12px 4px 4px; border-radius: var(--radius-pill); background: var(--chip); color: var(--text); }
+.pill-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; }
+
+.shift-box { margin-top: 16px; padding: 12px 14px; border-radius: var(--radius-md); background: var(--accent-soft); border: 1px solid var(--accent-line); }
+.shift-label { font-size: 11px; font-weight: 600; color: var(--accent-ink); letter-spacing: 0.04em; margin-bottom: 4px; text-transform: uppercase; }
+.shift-text { font-size: 14px; line-height: 1.5; }
+.shift-ingredient { font-weight: 700; }
+
+.action-row { display: flex; gap: 8px; margin-top: 16px; }
+.btn { padding: 11px 18px; font-size: 14px; font-weight: 600; border: none; border-radius: var(--radius-pill); background: var(--chip); color: var(--text); }
+.btn:active { transform: scale(0.98); }
 
 /* Footer */
-.footer {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-.footer a {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--faint);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-}
-.footer a:hover { color: var(--muted); }
-.footer span {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--faint);
-  letter-spacing: 0.04em;
-}
+.footer { text-align: center; font-size: 12px; color: var(--muted); padding-top: 20px; line-height: 2; }
+.footer a { color: var(--text-2); font-weight: 600; text-decoration: none; border-bottom: 1px solid #dcdcf0; }
 </style>
 </head>
 <body>
-<div class="app">
-
-  <div class="header">
-    <h1>Palette</h1>
-    <span>Colour & Nourishment · Creatis</span>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top"><span class="brand">Creatis Palette</span></div>
+    <h1 class="headline">What colour<br>is your plate?</h1>
+    <div class="hero-links">
+      <a class="hero-link" href="https://match.bizemind.com/" target="_blank" rel="noopener">Match ↗</a>
+    </div>
   </div>
+</header>
+
+<div class="wrap app">
 
   <!-- Step 1: Effect -->
   <div class="card">
@@ -743,7 +194,6 @@ body {
       <button class="mode-btn" id="modeImage" onclick="setMode('image')">Photograph plate</button>
     </div>
 
-    <!-- Image mode -->
     <div id="imageMode" style="display:none">
       <div class="image-zone" id="imageZone">
         <input type="file" id="imageFile" accept="image/*" capture="environment" onchange="handleImageFile(event)">
@@ -757,7 +207,6 @@ body {
       <div class="analyse-status" id="analyseStatus"></div>
     </div>
 
-    <!-- Manual mode -->
     <div id="manualMode">
       <div id="ingredientGrid"></div>
     </div>
@@ -769,7 +218,7 @@ body {
     <div id="result" style="display:none">
       <div class="result-swatch-row">
         <div id="resultSwatch" class="result-swatch"></div>
-        <div style="flex:1">
+        <div style="flex:1;min-width:0">
           <div id="resultCategory" class="result-category"></div>
           <div id="resultName" class="result-name"></div>
           <div id="resultSub" class="result-sub"></div>
@@ -780,9 +229,7 @@ body {
 
       <div id="alignmentBox" class="alignment" style="display:none">
         <div class="alignment-label">Alignment with <span id="alignmentEffect"></span></div>
-        <div class="alignment-bar-track">
-          <div class="alignment-bar-fill" id="alignmentBar"></div>
-        </div>
+        <div class="alignment-bar-track"><div class="alignment-bar-fill" id="alignmentBar"></div></div>
         <div class="alignment-text" id="alignmentText"></div>
       </div>
 
@@ -805,9 +252,8 @@ body {
   </div>
 
   <div class="footer">
-    <a href="http://bizemind.com" target="_blank" rel="noopener">bizemind</a><span> — Built by Creatis</span>
-    <br><br>
-    <a href="https://match.bizemind.com/" target="_blank" rel="noopener">match</a><span> × palette</span>
+    <a href="http://bizemind.com" target="_blank" rel="noopener">bizemind</a> — Built by Creatis<br>
+    <a href="https://match.bizemind.com/" target="_blank" rel="noopener">match</a> × palette
   </div>
 
 </div>
@@ -929,7 +375,6 @@ const GROUPS = [
 ];
 
 /* ─── Effects ─── */
-// weight: 1.5 = primary, 1.0 = supporting, 0.3 = suppressed, 1.0 = neutral (black always 1.0)
 const EFFECTS = [
   {
     key: "energy",
@@ -1017,219 +462,83 @@ const EFFECTS = [
 /* ─── Extended search-only ingredients ─── */
 const EXTENDED = {
   yellow: [
-    // Original 10
-    { name: "White Pasta",         emoji: "🍝" },
-    { name: "Corn",                emoji: "🌽" },
-    { name: "Mango",               emoji: "🥭" },
-    { name: "Dates",               emoji: "🫘" },
-    { name: "Maple Syrup",         emoji: "🍁" },
-    { name: "Watermelon",          emoji: "🍉" },
-    { name: "Rice Cakes",          emoji: "🍘" },
-    { name: "Pineapple",           emoji: "🍍" },
-    { name: "Sugarcane Juice",     emoji: "🥤" },
-    { name: "Jaggery",             emoji: "🟫" },
-    // India-first
-    { name: "Poha",                emoji: "🍚" },
-    { name: "Sabudana",            emoji: "⚪" },
-    { name: "Semolina (Rava)",     emoji: "🫙" },
-    { name: "Idli",                emoji: "🫓" },
-    { name: "Murmura",             emoji: "🍚" },
-    { name: "Dosa",                emoji: "🫓" },
-    // Global
-    { name: "Bagel",               emoji: "🥯" },
-    { name: "Cornflakes",          emoji: "🌽" },
-    { name: "Rice Paper",          emoji: "🍚" },
-    { name: "Tapioca",             emoji: "⚪" },
-    { name: "Agave Syrup",         emoji: "🍯" },
-    { name: "Fruit Juice",         emoji: "🧃" },
+    { name: "White Pasta", emoji: "🍝" }, { name: "Corn", emoji: "🌽" }, { name: "Mango", emoji: "🥭" },
+    { name: "Dates", emoji: "🫘" }, { name: "Maple Syrup", emoji: "🍁" }, { name: "Watermelon", emoji: "🍉" },
+    { name: "Rice Cakes", emoji: "🍘" }, { name: "Pineapple", emoji: "🍍" }, { name: "Sugarcane Juice", emoji: "🥤" },
+    { name: "Jaggery", emoji: "🟫" }, { name: "Poha", emoji: "🍚" }, { name: "Sabudana", emoji: "⚪" },
+    { name: "Semolina (Rava)", emoji: "🫙" }, { name: "Idli", emoji: "🫓" }, { name: "Murmura", emoji: "🍚" },
+    { name: "Dosa", emoji: "🫓" }, { name: "Bagel", emoji: "🥯" }, { name: "Cornflakes", emoji: "🌽" },
+    { name: "Rice Paper", emoji: "🍚" }, { name: "Tapioca", emoji: "⚪" }, { name: "Agave Syrup", emoji: "🍯" },
+    { name: "Fruit Juice", emoji: "🧃" },
   ],
   orange: [
-    // Original 9
-    { name: "Butternut Squash",    emoji: "🎃" },
-    { name: "Yam",                 emoji: "🍠" },
-    { name: "Parsnip",             emoji: "🥕" },
-    { name: "Lentil Pasta",        emoji: "🍝" },
-    { name: "Rye Bread",           emoji: "🍞" },
-    { name: "Millet",              emoji: "🌾" },
-    { name: "Sorghum",             emoji: "🌾" },
-    { name: "Taro",                emoji: "🫚" },
-    { name: "Plantain",            emoji: "🍌" },
-    // India-first
-    { name: "Rajgira",             emoji: "🌾" },
-    { name: "Jowar",               emoji: "🌾" },
-    { name: "Makhana",             emoji: "⚪" },
-    { name: "Raw Banana",          emoji: "🍌" },
-    { name: "Jackfruit",           emoji: "🟡" },
-    { name: "Suran",               emoji: "🍠" },
-    // Global
-    { name: "Acorn Squash",        emoji: "🎃" },
-    { name: "Cassava",             emoji: "🍠" },
-    { name: "Freekeh",             emoji: "🌾" },
-    { name: "Green Banana",        emoji: "🍌" },
-    { name: "Chestnuts",           emoji: "🌰" },
-    { name: "Polenta",             emoji: "🫙" },
+    { name: "Butternut Squash", emoji: "🎃" }, { name: "Yam", emoji: "🍠" }, { name: "Parsnip", emoji: "🥕" },
+    { name: "Lentil Pasta", emoji: "🍝" }, { name: "Rye Bread", emoji: "🍞" }, { name: "Millet", emoji: "🌾" },
+    { name: "Sorghum", emoji: "🌾" }, { name: "Taro", emoji: "🫚" }, { name: "Plantain", emoji: "🍌" },
+    { name: "Rajgira", emoji: "🌾" }, { name: "Jowar", emoji: "🌾" }, { name: "Makhana", emoji: "⚪" },
+    { name: "Raw Banana", emoji: "🍌" }, { name: "Jackfruit", emoji: "🟡" }, { name: "Suran", emoji: "🍠" },
+    { name: "Acorn Squash", emoji: "🎃" }, { name: "Cassava", emoji: "🍠" }, { name: "Freekeh", emoji: "🌾" },
+    { name: "Green Banana", emoji: "🍌" }, { name: "Chestnuts", emoji: "🌰" }, { name: "Polenta", emoji: "🫙" },
   ],
   red: [
-    // Original 10
-    { name: "Paneer",              emoji: "🧀" },
-    { name: "Chickpeas",           emoji: "🫘" },
-    { name: "Kidney Beans",        emoji: "🫘" },
-    { name: "Black Beans",         emoji: "🫘" },
-    { name: "Greek Yogurt",        emoji: "🥛" },
-    { name: "Cottage Cheese",      emoji: "🧀" },
-    { name: "Tuna",                emoji: "🐟" },
-    { name: "Shrimp",              emoji: "🍤" },
-    { name: "Tempeh",              emoji: "🟫" },
-    { name: "Mutton",              emoji: "🍖" },
-    // India-first
-    { name: "Soya Chunks",         emoji: "🟫" },
-    { name: "Masoor Dal",          emoji: "🫘" },
-    { name: "Chana Dal",           emoji: "🫘" },
-    { name: "Quail Eggs",          emoji: "🥚" },
-    { name: "Hung Curd",           emoji: "🥛" },
-    { name: "Bone Broth",          emoji: "🍵" },
-    // Global
-    { name: "Edamame",             emoji: "🫛" },
-    { name: "Seitan",              emoji: "🟫" },
-    { name: "Sardines",            emoji: "🐟" },
-    { name: "Turkey",              emoji: "🍗" },
-    { name: "Crab",                emoji: "🦀" },
-    { name: "Red Lentils",         emoji: "🫘" },
+    { name: "Paneer", emoji: "🧀" }, { name: "Chickpeas", emoji: "🫘" }, { name: "Kidney Beans", emoji: "🫘" },
+    { name: "Black Beans", emoji: "🫘" }, { name: "Greek Yogurt", emoji: "🥛" }, { name: "Cottage Cheese", emoji: "🧀" },
+    { name: "Tuna", emoji: "🐟" }, { name: "Shrimp", emoji: "🍤" }, { name: "Tempeh", emoji: "🟫" },
+    { name: "Mutton", emoji: "🍖" }, { name: "Soya Chunks", emoji: "🟫" }, { name: "Masoor Dal", emoji: "🫘" },
+    { name: "Chana Dal", emoji: "🫘" }, { name: "Quail Eggs", emoji: "🥚" }, { name: "Hung Curd", emoji: "🥛" },
+    { name: "Bone Broth", emoji: "🍵" }, { name: "Edamame", emoji: "🫛" }, { name: "Seitan", emoji: "🟫" },
+    { name: "Sardines", emoji: "🐟" }, { name: "Turkey", emoji: "🍗" }, { name: "Crab", emoji: "🦀" },
+    { name: "Red Lentils", emoji: "🫘" },
   ],
   blue: [
-    // Original 10
-    { name: "Walnuts",             emoji: "🌰" },
-    { name: "Flaxseeds",           emoji: "🌱" },
-    { name: "Chia Seeds",          emoji: "🌱" },
-    { name: "Coconut Oil",         emoji: "🥥" },
-    { name: "Ghee",                emoji: "🫙" },
-    { name: "Tahini",              emoji: "🫙" },
-    { name: "Peanut Butter",       emoji: "🥜" },
-    { name: "Mackerel",            emoji: "🐟" },
-    { name: "Sesame Oil",          emoji: "🫙" },
-    { name: "Hemp Seeds",          emoji: "🌱" },
-    // India-first
-    { name: "Mustard Oil",         emoji: "🫙" },
-    { name: "Groundnut Oil",       emoji: "🫙" },
-    { name: "Cashews",             emoji: "🌰" },
-    { name: "Sunflower Seeds",     emoji: "🌻" },
-    { name: "Poppy Seeds",         emoji: "🌱" },
-    { name: "Kokum Butter",        emoji: "🫙" },
-    // Global
-    { name: "Pumpkin Seeds",       emoji: "🌱" },
-    { name: "Pine Nuts",           emoji: "🌰" },
-    { name: "Hazelnuts",           emoji: "🌰" },
-    { name: "Brazil Nuts",         emoji: "🌰" },
-    { name: "Cod Liver Oil",       emoji: "🫙" },
-    { name: "Flaxseed Oil",        emoji: "🫙" },
+    { name: "Walnuts", emoji: "🌰" }, { name: "Flaxseeds", emoji: "🌱" }, { name: "Chia Seeds", emoji: "🌱" },
+    { name: "Coconut Oil", emoji: "🥥" }, { name: "Ghee", emoji: "🫙" }, { name: "Tahini", emoji: "🫙" },
+    { name: "Peanut Butter", emoji: "🥜" }, { name: "Mackerel", emoji: "🐟" }, { name: "Sesame Oil", emoji: "🫙" },
+    { name: "Hemp Seeds", emoji: "🌱" }, { name: "Mustard Oil", emoji: "🫙" }, { name: "Groundnut Oil", emoji: "🫙" },
+    { name: "Cashews", emoji: "🌰" }, { name: "Sunflower Seeds", emoji: "🌻" }, { name: "Poppy Seeds", emoji: "🌱" },
+    { name: "Kokum Butter", emoji: "🫙" }, { name: "Pumpkin Seeds", emoji: "🌱" }, { name: "Pine Nuts", emoji: "🌰" },
+    { name: "Hazelnuts", emoji: "🌰" }, { name: "Brazil Nuts", emoji: "🌰" }, { name: "Cod Liver Oil", emoji: "🫙" },
+    { name: "Flaxseed Oil", emoji: "🫙" },
   ],
   purple: [
-    // Original 10
-    { name: "Pomegranate",         emoji: "🍎" },
-    { name: "Acai",                emoji: "🫐" },
-    { name: "Purple Sweet Potato", emoji: "🍠" },
-    { name: "Eggplant",            emoji: "🍆" },
-    { name: "Black Grapes",        emoji: "🍇" },
-    { name: "Moringa",             emoji: "🌿" },
-    { name: "Amla",                emoji: "🟢" },
-    { name: "Jamun",               emoji: "🍇" },
-    { name: "Ashwagandha",         emoji: "🌿" },
-    { name: "Spirulina",           emoji: "🌊" },
-    // India-first
-    { name: "Karela",              emoji: "🥒" },
-    { name: "Falsa",               emoji: "🫐" },
-    { name: "Kokum",               emoji: "🟣" },
-    { name: "Dried Rose Petals",   emoji: "🌹" },
-    { name: "Saffron",             emoji: "🌿" },
-    { name: "Brahmi",              emoji: "🌿" },
-    // Global
-    { name: "Elderberry",          emoji: "🫐" },
-    { name: "Tart Cherry",         emoji: "🍒" },
-    { name: "Cacao Nibs",          emoji: "🫘" },
-    { name: "Dandelion",           emoji: "🌼" },
-    { name: "Red Onion",           emoji: "🧅" },
-    { name: "Hibiscus",            emoji: "🌺" },
+    { name: "Pomegranate", emoji: "🍎" }, { name: "Acai", emoji: "🫐" }, { name: "Purple Sweet Potato", emoji: "🍠" },
+    { name: "Eggplant", emoji: "🍆" }, { name: "Black Grapes", emoji: "🍇" }, { name: "Moringa", emoji: "🌿" },
+    { name: "Amla", emoji: "🟢" }, { name: "Jamun", emoji: "🍇" }, { name: "Ashwagandha", emoji: "🌿" },
+    { name: "Spirulina", emoji: "🌊" }, { name: "Karela", emoji: "🥒" }, { name: "Falsa", emoji: "🫐" },
+    { name: "Kokum", emoji: "🟣" }, { name: "Dried Rose Petals", emoji: "🌹" }, { name: "Saffron", emoji: "🌿" },
+    { name: "Brahmi", emoji: "🌿" }, { name: "Elderberry", emoji: "🫐" }, { name: "Tart Cherry", emoji: "🍒" },
+    { name: "Cacao Nibs", emoji: "🫘" }, { name: "Dandelion", emoji: "🌼" }, { name: "Red Onion", emoji: "🧅" },
+    { name: "Hibiscus", emoji: "🌺" },
   ],
   black: [
-    // Original 10
-    { name: "Cardamom",            emoji: "🫛" },
-    { name: "Cinnamon",            emoji: "🌿" },
-    { name: "Cloves",              emoji: "🌿" },
-    { name: "Star Anise",          emoji: "⭐" },
-    { name: "Fenugreek",           emoji: "🌱" },
-    { name: "Mustard Seeds",       emoji: "🌱" },
-    { name: "Nigella Seeds",       emoji: "🌱" },
-    { name: "Dried Chilli",        emoji: "🌶" },
-    { name: "Asafoetida",          emoji: "🫙" },
-    { name: "Mace",                emoji: "🌿" },
-    // India-first
-    { name: "Kala Namak",          emoji: "🧂" },
-    { name: "Amchur",              emoji: "🌿" },
-    { name: "Tamarind",            emoji: "🟫" },
-    { name: "Ajwain",              emoji: "🌱" },
-    { name: "Dried Ginger (Sonth)",emoji: "🌿" },
-    { name: "Tej Patta",           emoji: "🍃" },
-    // Global
-    { name: "Sumac",               emoji: "🌿" },
-    { name: "Smoked Paprika",      emoji: "🌶" },
-    { name: "Vanilla",             emoji: "🫙" },
-    { name: "Juniper Berry",       emoji: "🫐" },
-    { name: "Caraway Seeds",       emoji: "🌱" },
-    { name: "Dried Lavender",      emoji: "💜" },
+    { name: "Cardamom", emoji: "🫛" }, { name: "Cinnamon", emoji: "🌿" }, { name: "Cloves", emoji: "🌿" },
+    { name: "Star Anise", emoji: "⭐" }, { name: "Fenugreek", emoji: "🌱" }, { name: "Mustard Seeds", emoji: "🌱" },
+    { name: "Nigella Seeds", emoji: "🌱" }, { name: "Dried Chilli", emoji: "🌶" }, { name: "Asafoetida", emoji: "🫙" },
+    { name: "Mace", emoji: "🌿" }, { name: "Kala Namak", emoji: "🧂" }, { name: "Amchur", emoji: "🌿" },
+    { name: "Tamarind", emoji: "🟫" }, { name: "Ajwain", emoji: "🌱" }, { name: "Dried Ginger (Sonth)", emoji: "🌿" },
+    { name: "Tej Patta", emoji: "🍃" }, { name: "Sumac", emoji: "🌿" }, { name: "Smoked Paprika", emoji: "🌶" },
+    { name: "Vanilla", emoji: "🫙" }, { name: "Juniper Berry", emoji: "🫐" }, { name: "Caraway Seeds", emoji: "🌱" },
+    { name: "Dried Lavender", emoji: "💜" },
   ],
   green: [
-    // Original 10
-    { name: "Kale",                emoji: "🥬" },
-    { name: "Peas",                emoji: "🫛" },
-    { name: "Zucchini",            emoji: "🥒" },
-    { name: "Celery",              emoji: "🥬" },
-    { name: "Asparagus",           emoji: "🌿" },
-    { name: "Methi",               emoji: "🌿" },
-    { name: "Moringa Leaves",      emoji: "🌿" },
-    { name: "Drumstick",           emoji: "🌿" },
-    { name: "Lettuce",             emoji: "🥬" },
-    { name: "Arugula",             emoji: "🥬" },
-    // India-first
-    { name: "Bathua",              emoji: "🥬" },
-    { name: "Sarson",              emoji: "🥬" },
-    { name: "Tendli",              emoji: "🥒" },
-    { name: "Suva (Dill)",         emoji: "🌿" },
-    { name: "Chaulai",             emoji: "🥬" },
-    { name: "Methi Leaves",        emoji: "🌿" },
-    // Global
-    { name: "Swiss Chard",         emoji: "🥬" },
-    { name: "Bok Choy",            emoji: "🥬" },
-    { name: "Watercress",          emoji: "🌿" },
-    { name: "Green Beans",         emoji: "🫛" },
-    { name: "Fennel",              emoji: "🌿" },
-    { name: "Microgreens",         emoji: "🌱" },
+    { name: "Kale", emoji: "🥬" }, { name: "Peas", emoji: "🫛" }, { name: "Zucchini", emoji: "🥒" },
+    { name: "Celery", emoji: "🥬" }, { name: "Asparagus", emoji: "🌿" }, { name: "Methi", emoji: "🌿" },
+    { name: "Moringa Leaves", emoji: "🌿" }, { name: "Drumstick", emoji: "🌿" }, { name: "Lettuce", emoji: "🥬" },
+    { name: "Arugula", emoji: "🥬" }, { name: "Bathua", emoji: "🥬" }, { name: "Sarson", emoji: "🥬" },
+    { name: "Tendli", emoji: "🥒" }, { name: "Suva (Dill)", emoji: "🌿" }, { name: "Chaulai", emoji: "🥬" },
+    { name: "Methi Leaves", emoji: "🌿" }, { name: "Swiss Chard", emoji: "🥬" }, { name: "Bok Choy", emoji: "🥬" },
+    { name: "Watercress", emoji: "🌿" }, { name: "Green Beans", emoji: "🫛" }, { name: "Fennel", emoji: "🌿" },
+    { name: "Microgreens", emoji: "🌱" },
   ],
   brown: [
-    // Original 10
-    { name: "Barley",              emoji: "🌾" },
-    { name: "Buckwheat",           emoji: "🌾" },
-    { name: "Amaranth",            emoji: "🌾" },
-    { name: "Moong Dal",           emoji: "🫘" },
-    { name: "Toor Dal",            emoji: "🫘" },
-    { name: "Urad Dal",            emoji: "🫘" },
-    { name: "Oat Bran",            emoji: "🌾" },
-    { name: "Spelt",               emoji: "🌾" },
-    { name: "Farro",               emoji: "🌾" },
-    { name: "Rajma",               emoji: "🫘" },
-    // India-first
-    { name: "Moth Beans",          emoji: "🫘" },
-    { name: "Kala Chana",          emoji: "🫘" },
-    { name: "Horsegram",           emoji: "🫘" },
-    { name: "Ragi",                emoji: "🌾" },
-    { name: "Samai",               emoji: "🌾" },
-    { name: "Kodo Millet",         emoji: "🌾" },
-    // Global
-    { name: "Wild Rice",           emoji: "🌾" },
-    { name: "Navy Beans",          emoji: "🫘" },
-    { name: "Pinto Beans",         emoji: "🫘" },
-    { name: "Kamut",               emoji: "🌾" },
-    { name: "Teff",                emoji: "🌾" },
-    { name: "Lentil Soup Mix",     emoji: "🫘" },
+    { name: "Barley", emoji: "🌾" }, { name: "Buckwheat", emoji: "🌾" }, { name: "Amaranth", emoji: "🌾" },
+    { name: "Moong Dal", emoji: "🫘" }, { name: "Toor Dal", emoji: "🫘" }, { name: "Urad Dal", emoji: "🫘" },
+    { name: "Oat Bran", emoji: "🌾" }, { name: "Spelt", emoji: "🌾" }, { name: "Farro", emoji: "🌾" },
+    { name: "Rajma", emoji: "🫘" }, { name: "Moth Beans", emoji: "🫘" }, { name: "Kala Chana", emoji: "🫘" },
+    { name: "Horsegram", emoji: "🫘" }, { name: "Ragi", emoji: "🌾" }, { name: "Samai", emoji: "🌾" },
+    { name: "Kodo Millet", emoji: "🌾" }, { name: "Wild Rice", emoji: "🌾" }, { name: "Navy Beans", emoji: "🫘" },
+    { name: "Pinto Beans", emoji: "🫘" }, { name: "Kamut", emoji: "🌾" }, { name: "Teff", emoji: "🌾" },
+    { name: "Lentil Soup Mix", emoji: "🫘" },
   ],
 };
 
@@ -1256,27 +565,20 @@ function setMode(mode) {
 function handleImageFile(event) {
   const file = event.target.files[0];
   if (!file) return;
-
   const img = new Image();
   const reader = new FileReader();
-
   reader.onload = function(e) {
     img.onload = function() {
-      // Resize to max 1024px on longest side
       const MAX = 1024;
       let w = img.width, h = img.height;
       if (w > h && w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
       else if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
-
       const canvas = document.createElement('canvas');
       canvas.width = w;
       canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-
-      // Compress to JPEG at 0.7 quality
       const compressed = canvas.toDataURL('image/jpeg', 0.7);
       currentImageBase64 = compressed.split(',')[1];
-
       const zone = document.getElementById('imageZone');
       zone.classList.add('has-image');
       zone.innerHTML = `<img class="image-preview-img" src="${compressed}" alt="Plate">`;
@@ -1305,7 +607,6 @@ async function analysePlate() {
     showAnalyseStatus('Please select an image first.', true);
     return;
   }
-
   const btn = document.getElementById('analyseBtn');
   btn.disabled = true;
   showAnalyseStatus('Analysing your plate…');
@@ -1388,11 +689,9 @@ If you cannot identify any food, return: { "ingredients": [] }`;
 function showAnalyseStatus(msg, isError = false) {
   const el = document.getElementById('analyseStatus');
   el.textContent = msg;
-  el.style.color = isError ? 'var(--red, #C94040)' : 'var(--muted)';
+  el.style.color = isError ? 'var(--red, #b42318)' : 'var(--text-2)';
   el.classList.add('visible');
 }
-
-
 
 /* ─── Build effect pills ─── */
 const pillsContainer = document.getElementById("effectPills");
@@ -1427,7 +726,6 @@ function toggleEffect(key) {
 /* ─── Build ingredient grid ─── */
 const grid = document.getElementById("ingredientGrid");
 
-// Search box
 const searchWrap = document.createElement("div");
 searchWrap.className = "search-wrap";
 searchWrap.innerHTML = `
@@ -1476,7 +774,6 @@ function handleSearch() {
   const clearBtn = document.getElementById("searchClear");
   const label = document.getElementById("searchResultsLabel");
 
-  // Remove previously injected search result cards
   searchResultKeys.forEach(key => {
     const el = document.getElementById(`card-${key}`);
     if (el) el.remove();
@@ -1494,15 +791,13 @@ function handleSearch() {
   let totalResults = 0;
   GROUPS.forEach(group => {
     const extended = EXTENDED[group.key] || [];
-    const matches = extended.filter(ing =>
-      ing.name.toLowerCase().includes(query)
-    );
+    const matches = extended.filter(ing => ing.name.toLowerCase().includes(query));
     if (matches.length === 0) return;
 
     const iGrid = document.getElementById(`grid-${group.key}`);
     matches.forEach((ing, i) => {
       const key = `${group.key}:ext:${ing.name.replace(/\s+/g,'-').toLowerCase()}`;
-      if (document.getElementById(`card-${key}`)) return; // already injected
+      if (document.getElementById(`card-${key}`)) return;
       const card = document.createElement("div");
       card.className = "ingredient-card search-result";
       card.id = `card-${key}`;
@@ -1624,27 +919,21 @@ function getAlignmentScore(groupCounts) {
   if (!activeEffect) return null;
   const effect = EFFECTS.find(e => e.key === activeEffect);
   let score = 0, maxScore = 0;
-
   Object.entries(groupCounts).forEach(([key, count]) => {
     if (count === 0) return;
     const weight = effect.weights[key];
-    // Primary adds, suppressed subtracts slightly, neutral neutral
     if (weight >= 1.4) score += count * 2;
     else if (weight <= 0.4) score -= count * 1;
     else score += count * 1;
     maxScore += count * 2;
   });
-
-  // Clamp 0–100
   const pct = Math.max(0, Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100)));
   return pct;
 }
 
 /* ─── Profile name ─── */
 function getProfileName(groupCounts) {
-  const sorted = Object.entries(groupCounts)
-    .filter(([,v]) => v > 0)
-    .sort((a,b) => b[1]-a[1]);
+  const sorted = Object.entries(groupCounts).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
   if (sorted.length === 0) return null;
   const top = sorted.slice(0,2).map(([k]) => GROUPS.find(g => g.key === k).name);
   return top.join('–');
@@ -1674,14 +963,12 @@ function updateResult() {
   const dominantKey = Object.entries(groupCounts).sort((a,b)=>b[1]-a[1])[0][0];
   const dominantGroup = GROUPS.find(g => g.key === dominantKey);
 
-  // Preview
   const preview = document.getElementById("preview");
   preview.style.background = hex;
   preview.classList.add("active");
   document.getElementById("previewLabel").textContent = profileName;
   document.getElementById("previewSub").textContent = `${totalSelected} ingredient${totalSelected!==1?'s':''}`;
 
-  // Result
   document.getElementById("resultSwatch").style.background = hex;
   document.getElementById("resultCategory").textContent = dominantGroup.category;
   document.getElementById("resultName").textContent = dominantGroup.name;
@@ -1697,7 +984,6 @@ function updateResult() {
       <span>${dominantGroup.foodExplain}</span>
     </div>`;
 
-  // Alignment
   const alignmentBox = document.getElementById("alignmentBox");
   if (activeEffect) {
     const score = getAlignmentScore(groupCounts);
@@ -1715,7 +1001,6 @@ function updateResult() {
     alignmentBox.style.display = "none";
   }
 
-  // Composition bars
   const maxCount = Math.max(...Object.values(groupCounts), 1);
   document.getElementById("compBars").innerHTML = GROUPS.map(g => {
     const count = groupCounts[g.key];
@@ -1728,7 +1013,6 @@ function updateResult() {
     </div>`;
   }).join("");
 
-  // Pills
   const pills = [];
   selected.forEach(key => {
     const parts = key.split(':');
@@ -1753,7 +1037,6 @@ function updateResult() {
   });
   document.getElementById("selectedPills").innerHTML = pills.join("");
 
-  // Shift suggestion
   const shiftBox = document.getElementById("shiftBox");
   if (activeEffect) {
     const effect = EFFECTS.find(e => e.key === activeEffect);
